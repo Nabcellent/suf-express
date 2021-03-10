@@ -1,0 +1,93 @@
+
+<div id="register" class="container mt-4">
+    <section class="container">
+        <div class="row py-3 justify-content-center align-items-center" style="height: 75vh;">
+            <div class="col-7">
+                <div class="card anime_card">
+                    <div class="card-body shadow-lg">
+                        <div class="card-header bg-white border-0 d-flex flex-row align-items-center">
+                            <div class="col text-center">
+                                <h5 class="m-0 font-weight-bold" style="color: #900"><i class="fas fa-tags"></i> Register</h5>
+                            </div>
+                            <div class="text-danger list-group all_errors"></div>
+                        </div>
+                        <form id="reg_form" >
+                            <div class="form-row">
+                                <div class="form-group col">
+                                    <label class="anime_input_field">
+                                        <input type="text" name="first_name" class="anime_input" required>
+                                        <span class="placeholder">First name</span>
+                                    </label>
+                                </div>
+                                <div class="form-group col">
+                                    <label class="anime_input_field">
+                                        <input type="text" name="last_name"  class="anime_input" required>
+                                        <span class="placeholder">Last name</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="anime_input_field">
+                                    <input type="email" id="email" name="email"  class="anime_input" required>
+                                    <span class="placeholder">Email address</span>
+                                </label>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col">
+                                    <label class="anime_input_field">
+                                        <input type="number" id="phone" name="phone"  class="anime_input" pattern="((^0[17]+)|(^[17]+)).*" required>
+                                        <span class="placeholder">Phone number</span>
+                                    </label>
+                                </div>
+                                <div class="form-group col">
+                                    <label class="anime_input_field">
+                                        <input type="number" name="id_number"  class="anime_input" required>
+                                        <span class="placeholder">ID number</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group mb-0">
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="male" name="gender" class="custom-control-input" value="M">
+                                    <label class="custom-control-label" for="male">Male</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="female" name="gender" class="custom-control-input" value="F">
+                                    <label class="custom-control-label" for="female">Female</label>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col">
+                                    <label class="anime_input_field">
+                                        <input type="password" id="password" name="password"  class="anime_input" required>
+                                        <span class="placeholder">Create password</span>
+                                    </label>
+                                </div>
+                                <div class="form-group col">
+                                    <label class="anime_input_field">
+                                        <input type="password" id="confirm_password" name="confirm_password"  class="anime_input" required>
+                                        <span class="placeholder">Confirm password</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <input type="hidden" name="user_type" value="seller">
+                                    <div class="col d-flex justify-content-between">
+                                        <a href="/login" class="card-link">Sign In</a>
+                                        <button type="submit" class="btn btn-primary">Sign Up</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="alert-danger d-flex justify-content-center err_message"></div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

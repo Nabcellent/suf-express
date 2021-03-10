@@ -1,0 +1,174 @@
+
+<div class="container-fluid p-0">
+    <div class="row">
+        <div class="col-xl-3 col-md-6 col-sm-12 mb-4">
+            <a href="/products" class="card-link">
+                <div class="card-body shadow">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Products</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                <span class="badge badge-pill badge-primary"><%= dashInfo.products.length %></span>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fab fa-opencart fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <div class="card border-primary shadow">
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 col-sm-12 mb-4">
+            <a href="/customers" class="text-success card-link">
+                <div class="card-body shadow">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Customers</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                <span class="badge badge-pill badge-success"><%= dashInfo.customers.length %></span>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <div class="card border-success shadow">
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 col-sm-12 mb-4">
+            <a href="/orders" class="card-link text-warning">
+                <div class="card-body shadow">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Orders</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                <span class="badge badge-pill badge-warning"><%= dashInfo.orders.length %></span>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-tasks fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <div class="card border-warning">
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 col-sm-12 mb-4">
+            <a href="/product-add-ons" class="card-link text-info">
+                <div class="card-body shadow">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Product Categories</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                <span class="badge badge-pill badge-info"><%= dashInfo.productCats.length %></span>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-tags fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <div class="card border-info shadow">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-7 col-lg-6 col-md-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-danger">New Orders</h6>
+                    <div class="dropdown no-arrow">
+                        <a href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v text-danger"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink" style="">
+                            <div class="dropdown-header">Order Options</div>
+                            <a class="dropdown-item" href="../../admin/index.php?view_orders">View All Orders</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-borderless table-hover">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Customer Email</th>
+                                <th scope="col">Invoice No</th>
+                                <th scope="col">Product ID</th>
+                                <th scope="col">Qty</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Order Date</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+
+                            <% dashInfo.orders.forEach((row, i) => {
+                                let statusColor = (row.order_status === 'Pending') ? 'danger' : 'success'
+                            %>
+                            <tr>
+                                <td><%= i + 1 %></td>
+                                <td><%= row.user_email %></td>
+                                <td><%= row.order_invoice_no %></td>
+                                <td><%= row.pro_id %></td>
+                                <td><%= row.order_quantity %></td>
+                                <td>
+                                    <span class="badge badge-pill badge-<%= statusColor %>"><%= row.order_status %></span>
+                                </td>
+                                <td><%= dashInfo.moment(row.order_date).format('l') %></td>
+                            </tr>
+                            <% }) %>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-5 col-lg-6 col-md-12">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
+                    <div class="dropdown no-arrow">
+                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink" style="">
+                            <div class="dropdown-header">Dropdown Header:</div>
+                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <div class="text-center">
+                        <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="images/illustrations/undraw_web_developer_p3e5.svg" alt="">
+                    </div>
+                    <p>Add some quality, svg illustrations to your project courtesy of <a target="_blank" rel="nofollow" href="https://undraw.co/">unDraw</a>, a
+                        constantly updated collection of beautiful svg images that you can use
+                        completely free and without attribution!</p>
+                    <a target="_blank" rel="nofollow" href="https://undraw.co/">Browse Illustrations on
+                        unDraw →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
