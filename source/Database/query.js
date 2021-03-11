@@ -62,7 +62,7 @@ class Read {
         try {
             return await new Promise((resolve, reject) => {
                 let qry = selectQryBuilder(sqlParams);
-                //console.log(qry);
+                console.log(qry);
 
                 link.query(qry, (err, results) => {
                     if(err) {
@@ -108,35 +108,47 @@ const selectQryBuilder = (params) => {
 
     /*********************  JOIN  */
     if(typeof params.join == 'undefined' && params.join == null) {
-        if(typeof params.columns == 'undefined' && params.columns ==null) {
+        if(typeof params.columns == 'undefined' && params.columns == null) {
             qry = sql.select(params.table + '.*').from(params.table)
         } else {
-            if(params.columns.length > 1) {
-                qry = sql.select(
-                    params.columns
-                ).from(params.table);
-            } else {
-                qry = sql.select(params.columns).from(params.table);
-            }
+            qry = sql.select(params.table).from(params.table);
         }
     } else {
-        if(params.join.length > 1) {
-            let joinTables = '';
-
-            params.join.forEach(table => {
-                joinTables += `, ${table[0]}.*`;
-            });
-
-            qry  = sql.select(params.table + '.*' + joinTables)
+        if(params.columns !== 'undefined' && params.columns !== null) {
+            qry  = sql.select(params.columns)
                 .from(params.table)
+            if(params.join.length > 1) {
+                let joinTables = '';
 
-            params.join.forEach(join => {
-                qry = qry.join(join[0], join[1],)
-            });
+                params.join.forEach(table => {
+                    joinTables += `, ${table[0]}`;
+                });
+
+                params.join.forEach(join => {
+                    qry = qry.join(join[0], join[1])
+                });
+            } else {
+                qry  = qry.join(params.join[0][0], params.join[0][1])
+            }
         } else {
-            qry  = sql.select(params.table + '.*, ' + params.join[0][0] + '.*')
-                .from(params.table)
-                .join(params.join[0][0], params.join[0][1])
+            if(params.join.length > 1) {
+                let joinTables = '';
+
+                params.join.forEach(table => {
+                    joinTables += `, ${table[0]}.*`;
+                });
+
+                qry  = sql.select(params.table + '.*' + joinTables)
+                    .from(params.table)
+
+                params.join.forEach(join => {
+                    qry = qry.join(join[0], join[1],)
+                });
+            } else {
+                qry  = sql.select(params.table + '.*, ' + params.join[0][0] + '.*')
+                    .from(params.table)
+                    .join(params.join[0][0], params.join[0][1])
+            }
         }
     }
 

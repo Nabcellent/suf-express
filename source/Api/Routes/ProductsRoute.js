@@ -20,6 +20,10 @@ router
     .get(ProductController.readCreateProduct);
 
 router
+    .route('/view/:productId')
+    .get(ProductController.readSingleProduct);
+
+router
     .route('/categories')
     .get(ProductController.readCategories)
     .post(ProductController.createCategory);
@@ -31,35 +35,7 @@ router
 
 router
     .route('/addons')
-    .get(async (req, res) => {
-        const getAddOnData = async () => {
-            const data = {
-                categories: [],
-                subCategories: [],
-                coupons: [],
-                manufacturers: [],
-                moment: moment
-            };
-
-            (await dbRead.getReadInstance().getFromDb({
-                table: 'coupons',
-                join: [['products', 'coupons.pro_id = products.id']]
-            })).forEach((row) => {data.coupons.push(row)});
-            (await dbRead.getReadInstance().getFromDb({
-                table: 'sellers',
-            })).forEach((row) => {data.manufacturers.push(row)});
-
-            return data;
-        }
-
-        try {
-            const data = await getAddOnData();
-
-            res.render('pages/products/pro_addons', {Title: 'Add-Ons', layout: './layouts/nav', addonInfo: data});
-        } catch(error) {
-            console.log(error);
-        }
-});
+    .get(ProductController.readAddons);
 
 
 

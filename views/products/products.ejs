@@ -33,14 +33,15 @@
                                     <td></td>
                                     <td><img src="images/products/<%= row.main_image %>" alt="product" class="img-fluid"></td>
                                     <td class="title"><%= row.title %></td>
-                                    <td><%= row.man_name %></td>
-                                    <td class="text-nowrap"><%= productsInfo.moment(row.date).format('D/M/YY') %></td>
-                                    <td><%= row.price %></td>
-                                    <td><%= row.sale_price %></td>
+                                    <td><%= row.first_name %> <%= row.last_name %></td>
+                                    <td class="text-nowrap"><%= productsInfo.moment(row.created_at).format('D/M/YY') %></td>
+                                    <td class="text-center"><%= row.base_price %></td>
+                                    <td class="text-center"><%= row.sale_price %></td>
                                     <td><%= row.label %></td>
                                     <td class="text-center"><%= row.qry_sold %></td>
                                     <td class="action">
-                                        <a href="#" class="ml-3" title="Modify"><i class="fas fa-pen text-dark"></i></a>
+                                        <a href="/products/view/:<%= row.id %>" class="ml-3" title="view"><i class="fas fa-eye text-info"></i></a>
+                                        <a href="#" class="ml-2" title="Modify"><i class="fas fa-pen text-dark"></i></a>
                                         <a href="#" class="ml-2" title="Remove"><i class="fas fa-trash text-danger"></i></a>
                                     </td>
                                 </tr>

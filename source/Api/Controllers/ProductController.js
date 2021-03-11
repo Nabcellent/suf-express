@@ -47,7 +47,7 @@ module.exports = {
                         req.session.message = {
                             type: 'danger',
                             intro: 'Error!',
-                            message: 'Unable to insert product.'
+                            message: 'Unable to insert product.ejs.'
                         }
                         res.redirect('back');
                     }
@@ -70,15 +70,14 @@ module.exports = {
 
             for (const row of (await dbRead.getReadInstance().getFromDb({
                 table: 'products',
-                join: [
-                    ['users', 'products.seller_id = users.id']
-                ],
+                columns: 'products.id, title, main_image, seller_id, base_price, sale_price, label, users.first_name, users.last_name',
+                join: [['users', 'products.seller_id = users.id']],
                 orderBy: ['products.created_at DESC']
             }))) {
                 row.qry_sold = (await dbRead.getReadInstance().getFromDb({
                     table: 'orders',
                     where: [
-                        ['pro_id', '=', row.id],
+                        ['orders.pro_id', '=', row.id],
                         ['order_status', '=', 'complete']
                     ]
                 })).length;
@@ -111,6 +110,7 @@ module.exports = {
                 }),
                 sellers: await dbRead.getReadInstance().getFromDb({
                     table: 'users',
+                    columns: 'sellers.user_id',
                     join: [['sellers', 'users.id = sellers.user_id']]
                 })
             }
@@ -123,6 +123,15 @@ module.exports = {
         } catch (error) {
             console.log(error);
         }
+    },
+
+    readSingleProduct: async (req, res) => {
+        const {productId} = req.params;
+
+        res.render('products/product', {
+            Title: 'some product',
+            layout: './layouts/nav'
+        });
     },
 
 
@@ -202,7 +211,6 @@ module.exports = {
             })).forEach((row) => {data.categories.push(row)});
             (await dbRead.getReadInstance().getFromDb({
                 table: 'categories',
-                columns: ['title'],
                 where: [['category_id', 'IS NOT', 'NULL']],
                 groupBy: ['title'],
             })).forEach((row) => {data.subCategories.push(row)});
@@ -214,6 +222,38 @@ module.exports = {
             const data = await getCategories();
 
             res.render('products/categories', {Title: 'Categories', layout: './layouts/nav', categoryInfo: data});
+        } catch(error) {
+            console.log(error);
+        }
+    },
+
+
+    readAddons: async (req, res) => {
+        const getAddOnData = async () => {
+            const data = {
+                categories: [],
+                subCategories: [],
+                coupons: [],
+                manufacturers: [],
+                moment: moment
+            };
+
+            (await dbRead.getReadInstance().getFromDb({
+                table: 'coupons',
+                columns: 'coup_title',
+                join: [['products', 'coupons.pro_id = products.id']]
+            })).forEach((row) => {data.coupons.push(row)});
+            (await dbRead.getReadInstance().getFromDb({
+                table: 'sellers',
+            })).forEach((row) => {data.manufacturers.push(row)});
+
+            return data;
+        }
+
+        try {
+            const data = await getAddOnData();
+
+            res.render('products/pro_addons', {Title: 'Add-Ons', layout: './layouts/nav', addonInfo: data});
         } catch(error) {
             console.log(error);
         }

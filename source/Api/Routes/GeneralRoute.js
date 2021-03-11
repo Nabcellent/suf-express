@@ -41,6 +41,7 @@ router.get('/dashboard', /*checkAuth,*/ async (req, res) => {
         (await dbRead.getReadInstance().getFromDb({table: 'categories'})).forEach((row) => {data.productCats.push(row)});
         (await dbRead.getReadInstance().getFromDb({
             table: 'orders',
+            columns: 'order_amount, order_invoice_no, order_quantity, order_status, users.email, products.id',
             join: [
                 ['users', 'orders.id = users.id'],
                 ['products', 'orders.id = products.id']
@@ -119,22 +120,3 @@ router.get('/policies', checkAuth, async (req, res) => {
 
 module.exports = router;
 
-
-
-/*******
- * QUERY BUILDER PARAMS EXAMPLE
- * *
-const sqlParams = {
-    table: 'orders',
-    join: [
-        ['customers', 'orders.customer_id = customers.customer_id'],
-        ['products', 'orders.product_id = products.product_id']
-    ],
-    where: [
-        ['amount_due', '>=' ,1000],
-        ['amount_due', '<' ,3000]
-    ],
-    orderBy: ['amount_due DESC'],
-    groupBy: ['table.column'],
-    limit: 5
-}*/
