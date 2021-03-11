@@ -59,7 +59,7 @@ $(() => {
                         $('#reg_form .err_message').html(response.errors[0].msg);
                     } else if(response.success) {
                         $('#reg_form .err_message').html('');
-                        location.href = '/login';
+                        location.href = '/sign-in';
                     }
                 }
             });

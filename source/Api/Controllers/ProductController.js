@@ -1,6 +1,6 @@
 const ProductServices = require('../Services/ProductService');
-const {dbRead} = require("../../database/query");
 const moment = require('moment');
+const {dbRead} = require("../../Database/query");
 const {validationResult} = require("express-validator");
 
 module.exports = {
@@ -8,7 +8,6 @@ module.exports = {
         const errors = validationResult(req);
 
         if(!errors.isEmpty()) {
-            //return res.status(422).jsonp(errors.array());
             const alerts = errors.array()
 
             return res.render('products/add_product', {
@@ -20,23 +19,28 @@ module.exports = {
 
         if (!req.files || Object.keys(req.files).length === 0) {
             return res.status(400).send('No files were uploaded.');
-        } else {
-            const {main_image} = req.files;
-            let {name} = main_image;
-
-            await main_image.mv('public/images/products/' + name, (error) => {
-                if(error) {
-                    return res.send(error)
-                }
-            })
         }
+        const {main_image} = req.files;
+        let {name} = main_image;
+
+        await main_image.mv('public/images/products/' + name, (error) => {
+            if(error) {
+                return res.send(error);
+            }
+        })
 
         const {
             title, seller, category, label, base_price, keywords, description
         } = req.body;
 
         try {
-            //const result = ProductServices.createProduct(title, seller, category, label, base_price, name, keywords, description);
+            await ProductServices.createProduct(title, seller, category, label, base_price, name, keywords, description)
+                .then(data => {
+                    if(data === 1) {
+                        req.flash('message', 'Product Added!');
+                        res.redirect('/products');
+                    }
+                }).catch(error => console.error(error));
         } catch(error) {
             console.error(error);
             errors.push(error);
@@ -58,7 +62,7 @@ module.exports = {
             for (const row of (await dbRead.getReadInstance().getFromDb({
                 table: 'products',
                 join: [
-                    ['sellers', 'products.seller_id = sellers.id']
+                    ['users', 'products.seller_id = users.id']
                 ],
                 orderBy: ['products.created_at DESC']
             }))) {
@@ -98,7 +102,7 @@ module.exports = {
                 }),
                 sellers: await dbRead.getReadInstance().getFromDb({
                     table: 'users',
-                    where: [["user_type", '=', 'seller']]
+                    join: [['sellers', 'users.id = sellers.user_id']]
                 })
             }
         }
@@ -128,7 +132,7 @@ module.exports = {
 
             result
                 .then(data => {
-                    if(data.affectedRows === 1) {
+                    if(data === 1) {
                         res.redirect('back');
                     } else {
                         console.log(data);
@@ -206,6 +210,9 @@ module.exports = {
         }
     }
 }
+
+
+
 //res.redirect('back');
 
 

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const ProductController = require("../Controllers/ProductController");
 const {ProductValidation} = require("../Validations");
-const {dbRead} = require("../../database/query");
+const {dbRead} = require("../../Database/query");
 
 router
     .route('/')

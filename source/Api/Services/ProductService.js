@@ -4,8 +4,23 @@ const date = new Date();
 module.exports = {
     createProduct: async(title, seller, category, label, base_price, main_image, keywords, description) => {
         try {
+            const productDetails = {
+                category_id:category,  seller_id:seller,
+                title:title,           main_image:main_image,
+                keywords:keywords,     description:description,
+                label:label,           base_price:base_price,
+                created_at:date,       updated_at:date
+            }
             return await new Promise((resolve, reject) => {
-                //const qry = "INSERT INTO products()"
+                const qry = `INSERT INTO products SET ?`;
+
+                link.query(qry, productDetails, (error, result) => {
+                    if(error) {
+                        reject(new Error(error.message));
+                    } else {
+                        resolve(result.affectedRows);
+                    }
+                })
             })
         } catch(error) {
             console.log(error);
@@ -20,7 +35,7 @@ module.exports = {
                 link.query(qry, [title, JSON.stringify(values)],(error, result) => {
                     if(error)
                         reject(new Error(error.message));
-                    resolve(result);
+                    resolve(result.affectedRows);
                 })
             });
         } catch(error) {

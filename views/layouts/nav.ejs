@@ -7,6 +7,7 @@
 <header class="header">
     <div class="header_container">
         <div class="dropdown header_image">
+            S. Fashion
             <img src="/images/160-1606471_logo-java.png" alt="" data-toggle="dropdown">
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <a class="dropdown-item" href="#">Profile</a>
@@ -15,14 +16,14 @@
                 <a class="dropdown-item" href="#">Notifications</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#">Store</a>
-                <a class="dropdown-item" href="/logout">Exit</a>
+                <a class="dropdown-item" href="/sign-out">Exit</a>
             </div>
         </div>
         <div class="header_title d-flex">
             <a href="/" class="header_logo">Suf-Store </a>
 
             <% if(typeof pageTitle !== 'undefined') { %>
-            <span class="text-muted">/ <%= pageTitle %></span>
+                <span class="text-muted">/ <%= pageTitle %></span>
             <% } %>
 
         </div>
@@ -222,7 +223,7 @@
             </div>
         </div>
 
-        <a href="/logout" class="nav_link nav_logout">
+        <a href="/sign-out" class="nav_link nav_logout">
             <i class="bx bx-log-out nav_icon"></i>
             <span class="nav_name">Leave</span>
         </a>

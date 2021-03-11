@@ -12,7 +12,7 @@ link.connect((err) => {
     if(err) {
         console.log(err.message);
     } else {
-        console.log('database ' + link.state);
+        console.log('Database ' + link.state);
     }
 });
 

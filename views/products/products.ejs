@@ -30,13 +30,13 @@
                             <% productsInfo.products.forEach((row) => { %>
                                 <tr>
                                     <td></td>
-                                    <td><img src="images/products/<%= row.pro_image_one %>" alt="product" class="img-fluid"></td>
-                                    <td class="title"><%= row.pro_title %></td>
+                                    <td><img src="images/products/<%= row.main_image %>" alt="product" class="img-fluid"></td>
+                                    <td class="title"><%= row.title %></td>
                                     <td><%= row.man_name %></td>
-                                    <td class="text-nowrap"><%= productsInfo.moment(row.pro_date).format('D/M/YY') %></td>
-                                    <td><%= row.pro_price %></td>
-                                    <td><%= row.pro_sale_price %></td>
-                                    <td><%= row.pro_label %></td>
+                                    <td class="text-nowrap"><%= productsInfo.moment(row.date).format('D/M/YY') %></td>
+                                    <td><%= row.price %></td>
+                                    <td><%= row.sale_price %></td>
+                                    <td><%= row.label %></td>
                                     <td class="text-center"><%= row.qry_sold %></td>
                                     <td class="action">
                                         <a href="#" class="ml-3" title="Modify"><i class="fas fa-pen text-dark"></i></a>

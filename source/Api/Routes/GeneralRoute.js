@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express();
 const moment = require('moment');
-const db = require('../../database/query');
-const {checkAuth} = require("../Helpers/checkAuthentication");
+const db = require('../../Database/query');
+const {checkAuth} = require("../Middleware/checkAuthentication");
 const {dbRead} = db;
 
 

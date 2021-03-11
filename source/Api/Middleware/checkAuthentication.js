@@ -4,7 +4,7 @@ exports.checkAuth = function(req, res, next) {
         return next();
     }
 
-    res.redirect('/login');
+    res.redirect('/auth/sign-in');
 }
 
 exports.checkNotAuth = function(req, res, next) {

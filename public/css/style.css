@@ -624,7 +624,6 @@ select.crud_form {
     padding: 0 .7rem;
     border: none;
     font-size: 10.5pt;
-    cursor: pointer;
 }
 input[type="radio"].crud_form {
 
