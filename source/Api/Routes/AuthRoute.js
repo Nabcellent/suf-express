@@ -1,11 +1,13 @@
 const {Router} = require('express');
 const router = Router();
+const flash = require('connect-flash');
 const passport = require("passport");
 const initializePassport = require('../../Config/passport-config');
 const UserController = require("../Controllers/UserController");
 const {checkNotAuth} = require("../Middleware/checkAuthentication");
 const {UserValidation} = require("../Validations");
 initializePassport(passport);
+
 
 
 /**

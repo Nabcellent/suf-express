@@ -37,17 +37,26 @@ module.exports = {
             await ProductServices.createProduct(title, seller, category, label, base_price, name, keywords, description)
                 .then(data => {
                     if(data === 1) {
-                        req.flash('message', 'Product Added!');
+                        req.session.message = {
+                            type: 'success',
+                            intro: 'Success!',
+                            message: 'Product Inserted.'
+                        }
                         res.redirect('/products');
+                    } else {
+                        req.session.message = {
+                            type: 'danger',
+                            intro: 'Error!',
+                            message: 'Unable to insert product.'
+                        }
+                        res.redirect('back');
                     }
                 }).catch(error => console.error(error));
         } catch(error) {
             console.error(error);
-            errors.push(error);
             return res.render('products/add_product', {
                 Title: 'Add Product',
                 layout: './layouts/nav',
-                alerts: errors
             });
         }
     },

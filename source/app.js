@@ -6,7 +6,6 @@ const ejs = require('ejs');
 const bodyParser = require('body-parser');
 const path = require('path');
 const fileUpload = require('express-fileupload');
-const flash = require('connect-flash');
 
 app.use(cors());
 app.use(express.urlencoded({extended: false})); //==    Parse URL-encoded bodies (as sent by HTML forms)
@@ -33,14 +32,22 @@ app.set('view engine', 'ejs');
 
 //==    Setting Session
 const session = require('express-session');
+const flash = require('connect-flash');
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false
 }));
 
-//==    Flash Messages
 app.use(flash());
+
+//==    Flash Messages
+app.use((req, res, next) => {
+    res.locals.message = req.session.message
+    delete req.session.message
+    next()
+})
+
 
 //==    Configure passport middleware
 const passport = require('passport');
