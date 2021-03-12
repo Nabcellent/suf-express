@@ -5,7 +5,7 @@
 <div class="modal fade" id="add_variation" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="/products/categories" method="POST">
+            <form action="/products/details/variation/create/<%= details.product[0].id %>" method="POST">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -14,13 +14,25 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Title</label>
-                        <input type="text" class="form-control" name="title" aria-label required>
+                        Attribute
+                        <select class="variation form-control variation" name="attribute"
+                                id="variation_attribute_s2" style="width: 100%" aria-label required>
+                            <option></option>
+                            <% details.attributes.forEach((attribute) => { %>
+                                <option value="<%= attribute.name %>"><%= attribute.name %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        Value(s)
+                        <select class="variation form-control" id="values_s2" name="variation_values"
+                                style="width: 100%" aria-label>
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="submit" class="btn btn-primary">Add</button>
                 </div>
             </form>
         </div>

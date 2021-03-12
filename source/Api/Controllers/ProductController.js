@@ -51,7 +51,7 @@ module.exports = {
         }
     },
 
-    readProducts: async (req, res) => {
+    readProducts: async(req, res) => {
         const getProductData = async () => {
             const result = {
                 products: [],
@@ -115,33 +115,80 @@ module.exports = {
         }
     },
 
-    readSingleProduct: async (req, res) => {
+    readSingleProduct: async(req, res) => {
         const {id} = req.params;
         const productId = parseInt(id, 10);
-
-        const productDetails = await dbRead.getReadInstance().getFromDb({
-            table: 'products',
-            columns: 'products.title as product_title, main_image, keywords, ' +
-                'label, base_price, sale_price, products.created_at, description, ' +
-                'categories.title as category_title, users.last_name',
-            join: [
-                ['categories', 'products.category_id = categories.id'],
-                ['users', 'products.seller_id = users.id']
-            ],
-            where: [['products.id', '=', productId]]
-        });
+        const results = {
+            product: await dbRead.getReadInstance().getFromDb({
+                table: 'products',
+                columns: 'products.id, products.title as product_title, main_image, keywords, ' +
+                    'label, base_price, sale_price, products.created_at, description, ' +
+                    'categories.title as category_title, users.last_name',
+                join: [
+                    ['categories', 'products.category_id = categories.id'],
+                    ['users', 'products.seller_id = users.id']
+                ],
+                where: [['products.id', '=', productId]],
+                limit: 1
+            }),
+            attributes: await dbRead.getReadInstance().getFromDb({
+                table: 'attributes',
+                columns: 'id, name'
+            }),
+            variations: await dbRead.getReadInstance().getFromDb({
+                table: 'variations',
+                columns: 'variation',
+                where: [['product_id', '=', productId]]
+            })
+        }
 
         res.render('products/details', {
             Title: 'some product',
             layout: './layouts/nav',
-            details: productDetails[0],
+            details: results,
             moment: moment,
         });
     },
 
 
+    createVariation: async(req, res) => {
+        const errors = validationResult(req);
 
-    createAttribute: async (req, res) => {
+        if(!errors.isEmpty()) {
+            const error = errors.array()[0];
+            alert(req, 'info', 'Something is missing!', error.msg);
+
+            return res.redirect('back');
+        }
+
+        const productId = parseInt(req.params.id, 10);
+        const {attribute, variation_values} = req.body;
+        const variationsJson = JSON.stringify({[attribute]: variation_values});
+
+        try {
+            ProductServices.createVariation(productId, variationsJson)
+                .then((data) => {
+                    if(data.affectedRows === 1) {
+                        ProductServices.createVariationOptions(data.insertId, variation_values);
+                        alert(req, 'success', 'success!', 'Variation added.');
+                    } else {
+                        alert(req, 'danger', 'Error!', 'Unable to add variation');
+                    }
+
+                    res.redirect('back');
+                }).catch((error) => {
+                    console.log(error);
+                    alert(req, 'danger', 'Error!', 'Something went Wrong. Contact Admin');
+            });
+        } catch (error) {
+            alert(req, 'danger', 'Error!', 'Something went Wrong. Contact Admin');
+            console.log(error);
+        }
+    },
+
+
+
+    createAttribute: async(req, res) => {
         const errors = validationResult(req);
 
         if(!errors.isEmpty()) {
@@ -167,8 +214,8 @@ module.exports = {
                     }
                 }).catch(err => console.log(err));
         } catch (error) {
+            alert(req, 'danger', 'Error!', 'Something went Wrong. Contact Admin');
             console.error(error);
-            res.status(502).send("something wrong!")
         }
     },
 
@@ -244,6 +291,7 @@ module.exports = {
             console.log(error);
         }
     },
+
 
 
     readAddons: async (req, res) => {

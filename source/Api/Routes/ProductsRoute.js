@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const ProductController = require("../Controllers/ProductController");
-const {ProductValidation} = require("../Validations");
+const {ProductController, JQueryController} = require("../Controllers");
+const {ProductValidation, VariationValidation} = require("../Validations");
 
 router
     .route('/')
@@ -18,9 +18,15 @@ router
     .route('/create/info')
     .get(ProductController.readCreateProduct);
 
+
+
 router
     .route('/details/all/:id')
     .get(ProductController.readSingleProduct);
+
+router.post('/details/variation/create/:id', VariationValidation.create(), ProductController.createVariation);
+
+
 
 router
     .route('/categories')
@@ -37,5 +43,8 @@ router
     .get(ProductController.readAddons);
 
 
+/**
+ * JQUERY ROUTES    */
+router.get('/details/attributeValues/:name', JQueryController.getAttributeValueById);
 
 module.exports = router;

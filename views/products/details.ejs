@@ -2,9 +2,9 @@
 
 <div id="details" class="container-fluid px-0">
     <div class="row">
-        <div class="col-9">
+        <div class="col-10">
             <div class="row">
-                <div class="col-6 pr-1">
+                <div class="col-5 pr-1">
                     <div class="card bg-primary text-white crud_table shadow mb-4">
                         <div class="card-header d-flex flex-row align-items-center justify-content-between">
                             <h6 class="m-0 font-weight-bold"><i class="fab fa-opencart"></i> Product Details</h6>
@@ -12,41 +12,45 @@
                         </div>
                         <div class="card-body">
                             <div class="row no-gutters">
-                                <div class="col-md-4">
-                                    <img src="/images/products/<%= details.main_image %>" alt="main_image">
-                                    <h5 class="card-title pt-2"><%= details.product_title %></h5>
+                                <div class="col-md-5">
+                                    <img src="/images/products/<%= details.product[0].main_image %>" alt="main_image">
+                                    <h5 class="card-title pt-2"><%= details.product[0].product_title %></h5>
                                 </div>
-                                <div class="col-md-8">
-                                    <div class="card-body">
+                                <div class="col-md-7">
+                                    <div class="card-body pr-0">
                                         <table class="table table-sm table-borderless">
                                             <tbody>
                                             <tr>
                                                 <th class="py-0" scope="row">Category</th>
-                                                <td class="py-0"><%= details.category_title %></td>
+                                                <td class="py-0"><%= details.product[0].category_title %></td>
                                             </tr>
                                             <tr>
                                                 <th class="py-0" scope="row">Seller</th>
-                                                <td class="py-0"><%= details.last_name %></td>
+                                                <td class="py-0"><%= details.product[0].last_name %></td>
                                             </tr>
                                             <tr>
                                                 <th class="py-0" scope="row">Keywords</th>
-                                                <td class="py-0" colspan="2"><%= details.keywords %></td>
+                                                <td class="py-0" colspan="2"><%= details.product[0].keywords %></td>
                                             </tr>
                                             <tr>
                                                 <th class="py-0" scope="row">Label</th>
-                                                <td class="py-0" colspan="2"><%= details.label %></td>
+                                                <td class="py-0" colspan="2"><%= details.product[0].label %></td>
                                             </tr>
                                             <tr>
                                                 <th class="py-0" scope="row">Base Price</th>
-                                                <td class="py-0 font-weight-bolder text-warning" colspan="2"><%= parseFloat(details.base_price).toFixed(2) %>/=</td>
+                                                <td class="py-0 font-weight-bolder text-warning" colspan="2">
+                                                    <%= parseFloat(details.product[0].base_price).toFixed(2) %>/=
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <th class="py-0" scope="row">Sale Price</th>
-                                                <td class="py-0 font-weight-bolder text-warning" colspan="2"><%= parseFloat(details.sale_price).toFixed(2) %>/=</td>
+                                                <td class="py-0 font-weight-bolder text-warning" colspan="2">
+                                                    <%= parseFloat(details.product[0].sale_price).toFixed(2) %>/=
+                                                </td>
                                             </tr>
                                             </tbody>
                                         </table>
-                                        Date Created: <%= moment(details.created_at).format('DD-MM-YYYY') %>
+                                        Date Created: <%= moment(details.product[0].created_at).format('DD-MM-YYYY') %>
                                     </div>
                                 </div>
                             </div>
@@ -55,78 +59,93 @@
                                 <div class="col">
                                     <h6 class="m-0">Description</h6>
                                     <div class="dropdown-divider"></div>
-                                    <p class="m-0"><%= details.description %></p>
+                                    <p class="m-0"><%= details.product[0].description %></p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-6 pl-1 pr-0">
+                <div class="col-7 pl-1 pr-0">
                     <div class="card crud_table shadow mb-4">
                         <div class="card-header d-flex flex-row align-items-center justify-content-between">
                             <h6 class="m-0 font-weight-bold text-primary"><i class="fab fa-opencart"></i> Product Variations</h6>
-                            <button class="btn btn-outline-primary" data-toggle="modal" data-target="#add_variation">Create</button>
+                            <button class="btn btn-outline-primary" data-toggle="modal" data-target="#add_variation">Add Variation</button>
                         </div>
-                        <div class="card-body">
-                            <table class="table table-borderless">
+                        <div class="card-body pb-0">
+                            <% if(details.variations.length > 0) { %>
+                                <table class="table table-sm mb-1">
                                 <thead>
-                                <tr class="row">
-                                    <th class="col-3" scope="col">Type</th>
-                                    <th class="col-5" scope="col">Images</th>
-                                    <th class="col-2" scope="col">Extra Price</th>
-                                    <th class="col-2" scope="col">Actions</th>
+                                <tr>
+                                    <th scope="col">Variation</th>
+                                    <th scope="col">Actions</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr class="row">
-                                    <td class="col-3">
-                                        <div class="div">
-                                            Colors
-                                        </div>
-                                        <ul class="div">
-                                            <li>Red</li>
-                                            <li>Blue</li>
-                                            <li>White</li>
-                                        </ul>
-                                    </td>
-                                    <td class="col-5">
-                                        <img src="/images/160-1606471_logo-java.png" alt="image"
-                                             class="img-fluid rounded-circle" style="width: 3.7rem; height: 3.7rem; object-fit: cover">
-                                        <img src="/images/160-1606471_logo-java.png" alt="image"
-                                             class="img-fluid rounded-circle" style="width: 3.7rem; height: 3.7rem; object-fit: cover">
-                                        <img src="/images/160-1606471_logo-java.png" alt="image"
-                                             class="img-fluid rounded-circle" style="width: 3.7rem; height: 3.7rem; object-fit: cover">
-                                    </td>
-                                    <td class="col-2">@mdo</td>
-                                    <td class="col-1">
-                                        <a href="#"><i class="fas fa-pen"></i></a>
-                                        <a href="#"><i class="fas fa-trash"></i></a>
-                                    </td>
-                                </tr>
 
-                                <tr class="row">
-                                    <td class="col-3">
-                                        <div class="div">
-                                            Sizes
-                                        </div>
-                                        <ul class="div">
-                                            <li>S</li>
-                                            <li>M</li>
-                                            <li>L</li>
-                                        </ul>
-                                    </td>
-                                    <td class="col-5">
-                                        <img src="/images/illustrations/undraw_web_developer_p3e5.svg" alt="image"
-                                             class="img-fluid rounded-circle" style="width: 3.7rem; height: 3.7rem; object-fit: cover">
-                                    </td>
-                                    <td class="col-2">@fat</td>
-                                    <td class="col-1">
-                                        <a href="#"><i class="fas fa-pen"></i></a>
-                                        <a href="#"><i class="fas fa-trash"></i></a>
-                                    </td>
-                                </tr>
+                                <% details.variations.forEach((variation) => {
+                                    const attribute = Object.keys(JSON.parse(variation.variation))[0];
+                                    const values = JSON.parse(variation.variation)[attribute];
+                                %>
+                                    <tr>
+                                        <td class="pb-0 pt-1">
+                                            <table class="table table-sm">
+                                                <thead>
+                                                <tr class="row">
+                                                    <th class="col-5"><%= attribute %></th>
+                                                    <th class="col-6">Extra Cost</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                    <% if(Array.isArray(values)) {
+                                                    values.forEach(value => { %>
+                                                        <tr class="row">
+                                                            <td class="col-5"><%= value %></td>
+                                                            <td class="col-6">
+                                                                <div class="row">
+                                                                    <div class="col">0.00/-</div>
+                                                                    <div class="col"><a href="#">set price</a></div>
+                                                                    <div class="col">
+                                                                        <a href="#"><i class="fas fa-pen-fancy"></i> Image</a>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    <%})} else { %>
+                                                        <tr class="row">
+                                                            <td class="col-5"><%= values %></td>
+                                                            <td class="col-6">
+                                                                <div class="row">
+                                                                    <div class="col">0.00/-</div>
+                                                                    <div class="col"><a href="#">change price</a></div>
+                                                                    <div class="col">
+                                                                        <a href="#"><i class="fas fa-pen-fancy"></i> Image</a>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    <%} %>
+
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                        <td class="d-flex">
+                                            <a href="#"><h5><i class="fas fa-pen pl-3"></i></h5></a>
+                                            <a href="#"><h5><i class="fas fa-trash pl-3"></i></h5></a>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+
                                 </tbody>
                             </table>
+                            <% } else { %>
+                                    <div class="row my-5 ">
+                                        <div class="col">
+                                            <h5>This product has no variations.</h5>
+                                            <hr class="bg-primary">
+                                        </div>
+                                    </div>
+                            <% } %>
                         </div>
                     </div>
                 </div>
@@ -162,7 +181,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-2">
             <div class="card crud_table shadow mb-4">
                 <div class="card-body">
                     <div class="list-group list-group-flush">
