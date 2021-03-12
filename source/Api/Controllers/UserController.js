@@ -13,11 +13,7 @@ module.exports = {
         if(!errors.isEmpty()) {
             const alerts = errors.array()
 
-            return res.render('register', {
-                Title: 'Register',
-                layout: './layouts/nav',
-                alerts
-            });
+            res.json({errors: alerts})
         }
 
         const {first_name, last_name, email, id_number, gender, password} = req.body;

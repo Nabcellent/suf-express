@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const ProductController = require("../Controllers/ProductController");
 const {ProductValidation} = require("../Validations");
-const {dbRead} = require("../../Database/query");
 
 router
     .route('/')
@@ -20,7 +19,7 @@ router
     .get(ProductController.readCreateProduct);
 
 router
-    .route('/view/:productId')
+    .route('/details/all/:id')
     .get(ProductController.readSingleProduct);
 
 router

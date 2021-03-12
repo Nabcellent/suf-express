@@ -1,6 +1,5 @@
 const {Router} = require('express');
 const router = Router();
-const flash = require('connect-flash');
 const passport = require("passport");
 const initializePassport = require('../../Config/passport-config');
 const UserController = require("../Controllers/UserController");
@@ -30,5 +29,10 @@ router.route('/sign-in')
         failureFlash: 'Invalid Credentials',
         failureRedirect:'/auth/sign-in',
     }));
+
+router.get('/sign-out', (req, res) => {
+    req.logOut();
+    res.redirect('/auth/sign-in');
+});
 
 module.exports = router;

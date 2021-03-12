@@ -53,13 +53,13 @@ $(() => {
             $.ajax({
                 data: data,
                 method: 'POST',
-                url: '/register',
+                url: '/auth/register',
                 success: (response) => {
                     if(response.errors) {
                         $('#reg_form .err_message').html(response.errors[0].msg);
                     } else if(response.success) {
                         $('#reg_form .err_message').html('');
-                        location.href = '/sign-in';
+                        location.href = '/auth/sign-in';
                     }
                 }
             });

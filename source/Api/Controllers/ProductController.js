@@ -47,7 +47,7 @@ module.exports = {
                         req.session.message = {
                             type: 'danger',
                             intro: 'Error!',
-                            message: 'Unable to insert product.ejs.'
+                            message: 'Unable to insert product.'
                         }
                         res.redirect('back');
                     }
@@ -110,7 +110,7 @@ module.exports = {
                 }),
                 sellers: await dbRead.getReadInstance().getFromDb({
                     table: 'users',
-                    columns: 'sellers.user_id',
+                    columns: 'sellers.user_id, first_name, last_name',
                     join: [['sellers', 'users.id = sellers.user_id']]
                 })
             }
@@ -126,11 +126,26 @@ module.exports = {
     },
 
     readSingleProduct: async (req, res) => {
-        const {productId} = req.params;
+        const {id} = req.params;
+        const productId = parseInt(id, 10);
 
-        res.render('products/product', {
+        const productDetails = await dbRead.getReadInstance().getFromDb({
+            table: 'products',
+            columns: 'products.title as product_title, main_image, keywords, ' +
+                'label, base_price, sale_price, products.created_at, description, ' +
+                'categories.title as category_title, users.last_name',
+            join: [
+                ['categories', 'products.category_id = categories.id'],
+                ['users', 'products.seller_id = users.id']
+            ],
+            where: [['products.id', '=', productId]]
+        });
+
+        res.render('products/details', {
             Title: 'some product',
-            layout: './layouts/nav'
+            layout: './layouts/nav',
+            details: productDetails[0],
+            moment: moment,
         });
     },
 
@@ -211,6 +226,7 @@ module.exports = {
             })).forEach((row) => {data.categories.push(row)});
             (await dbRead.getReadInstance().getFromDb({
                 table: 'categories',
+                columns: 'id, title',
                 where: [['category_id', 'IS NOT', 'NULL']],
                 groupBy: ['title'],
             })).forEach((row) => {data.subCategories.push(row)});

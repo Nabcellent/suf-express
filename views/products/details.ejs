@@ -1,0 +1,176 @@
+<%- include('../partials/alert.ejs') %>
+
+<div id="details" class="container-fluid px-0">
+    <div class="row">
+        <div class="col-9">
+            <div class="row">
+                <div class="col-6 pr-1">
+                    <div class="card bg-primary text-white crud_table shadow mb-4">
+                        <div class="card-header d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold"><i class="fab fa-opencart"></i> Product Details</h6>
+                            <button class="btn btn-outline-light" data-toggle="modal" data-target="#add_category">Edit</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="row no-gutters">
+                                <div class="col-md-4">
+                                    <img src="/images/products/<%= details.main_image %>" alt="main_image">
+                                    <h5 class="card-title pt-2"><%= details.product_title %></h5>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <table class="table table-sm table-borderless">
+                                            <tbody>
+                                            <tr>
+                                                <th class="py-0" scope="row">Category</th>
+                                                <td class="py-0"><%= details.category_title %></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="py-0" scope="row">Seller</th>
+                                                <td class="py-0"><%= details.last_name %></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="py-0" scope="row">Keywords</th>
+                                                <td class="py-0" colspan="2"><%= details.keywords %></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="py-0" scope="row">Label</th>
+                                                <td class="py-0" colspan="2"><%= details.label %></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="py-0" scope="row">Base Price</th>
+                                                <td class="py-0 font-weight-bolder text-warning" colspan="2"><%= parseFloat(details.base_price).toFixed(2) %>/=</td>
+                                            </tr>
+                                            <tr>
+                                                <th class="py-0" scope="row">Sale Price</th>
+                                                <td class="py-0 font-weight-bolder text-warning" colspan="2"><%= parseFloat(details.sale_price).toFixed(2) %>/=</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        Date Created: <%= moment(details.created_at).format('DD-MM-YYYY') %>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <h6 class="m-0">Description</h6>
+                                    <div class="dropdown-divider"></div>
+                                    <p class="m-0"><%= details.description %></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 pl-1 pr-0">
+                    <div class="card crud_table shadow mb-4">
+                        <div class="card-header d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary"><i class="fab fa-opencart"></i> Product Variations</h6>
+                            <button class="btn btn-outline-primary" data-toggle="modal" data-target="#add_category">Add</button>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-borderless">
+                                <thead>
+                                <tr class="row">
+                                    <th class="col-3" scope="col">Type</th>
+                                    <th class="col-6" scope="col">Images</th>
+                                    <th class="col-3" scope="col">Extra Price</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr class="row">
+                                    <td class="col-3">
+                                        <div class="div">
+                                            Colors
+                                        </div>
+                                        <ul class="div">
+                                            <li>Red</li>
+                                            <li>Blue</li>
+                                            <li>White</li>
+                                        </ul>
+                                    </td>
+                                    <td class="col-6">
+                                        <img src="/images/160-1606471_logo-java.png" alt="image"
+                                             class="img-fluid rounded-circle" style="width: 4rem; height: 4rem; object-fit: cover">
+                                        <img src="/images/160-1606471_logo-java.png" alt="image"
+                                             class="img-fluid rounded-circle" style="width: 4rem; height: 4rem; object-fit: cover">
+                                        <img src="/images/160-1606471_logo-java.png" alt="image"
+                                             class="img-fluid rounded-circle" style="width: 4rem; height: 4rem; object-fit: cover">
+                                    </td>
+                                    <td class="col-3">@mdo</td>
+                                </tr>
+                                <tr class="row">
+                                    <td class="col-3">
+                                        <div class="div">
+                                            Sizes
+                                        </div>
+                                        <ul class="div">
+                                            <li>S</li>
+                                            <li>M</li>
+                                            <li>L</li>
+                                        </ul>
+                                    </td>
+                                    <td class="col-6">
+                                        <img src="/images/illustrations/undraw_web_developer_p3e5.svg" alt="image"
+                                             class="img-fluid rounded-circle" style="width: 4rem; height: 4rem; object-fit: cover">
+                                    </td>
+                                    <td class="col-3">@fat</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-9">
+                    <div class="card text-white bg-dark crud_table shadow mb-4">
+                        <div class="card-header d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-info"><i class="fab fa-opencart"></i> Product Images</h6>
+                            <button class="btn btn-outline-info" data-toggle="modal" data-target="#add_category">Edit</button>
+                        </div>
+                        <div class="card-body">
+                            <div id="details-swiper" class="swiper-container">
+                                <div class="swiper-wrapper">
+                                    <div class="swiper-slide">
+                                        <img src="/images/products/jacket-1.jpg" alt="">
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <img src="/images/products/jacket-2.jpg" alt="">
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <img src="/images/products/jacket-3.jpg" alt="">
+                                    </div>
+                                </div>
+                                <!-- Add Arrows -->
+                                <div class="swiper-button-next"></div>
+                                <div class="swiper-button-prev"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="card crud_table shadow mb-4">
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <a href="/products" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            All Products<span class="badge badge-primary badge-pill">14</span>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            Orders<span class="badge badge-primary badge-pill">7</span>
+                        </a>
+                        <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            Quantity Sold<span class="badge badge-primary badge-pill">17</span>
+                        </a>
+                        <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            Remaining stock<span class="badge badge-primary badge-pill">37</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

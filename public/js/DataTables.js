@@ -10,7 +10,7 @@ const productDataTable = $('#products_table').DataTable({
         info: 'Number of products: _MAX_',
         infoFiltered:   "(filtered _TOTAL_ products)",
         search: "_INPUT_",
-        searchPlaceholder: "Search product.ejs"
+        searchPlaceholder: "Search details.ejs"
     },
     columnDefs: [{
         searchable: false,

@@ -62,7 +62,7 @@ class Read {
         try {
             return await new Promise((resolve, reject) => {
                 let qry = selectQryBuilder(sqlParams);
-                console.log(qry);
+                //console.log(qry);
 
                 link.query(qry, (err, results) => {
                     if(err) {

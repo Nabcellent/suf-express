@@ -1,8 +1,9 @@
 const express = require('express');
+const favicon = require('serve-favicon');
+const createError = require('http-errors');
 const app = express();
 const cors = require('cors');
 const dotenv = require('dotenv').config();
-const ejs = require('ejs');
 const bodyParser = require('body-parser');
 const path = require('path');
 const fileUpload = require('express-fileupload');
@@ -17,6 +18,7 @@ app.use(fileUpload());
 //==    Static Files
 const publicDir = path.join(__dirname, '../public');
 app.use(express.static(publicDir));
+app.use(favicon(path.join(__dirname, '../public', 'favicon.ico')));
 app.use('/css', express.static(__dirname + 'public/css'));
 app.use('/js', express.static(__dirname + 'public/js'));
 app.use('/images', express.static(__dirname + 'public/images'));
@@ -59,5 +61,22 @@ app.use(passport.session());
 const apiRoutes = require('./Api/Routes');
 app.use(apiRoutes);
 
+
+//==    Catch 404 and forward to error handler
+app.use(function(req, res, next) {
+    next(createError.NotFound());
+});
+
+
+//==    Error handler
+app.use(function(error, req, res, next) {
+    // set locals, only providing error in development
+    res.locals.message = error.message;
+    res.locals.error = req.app.get('env') === 'development' ? error : {};
+
+    // render the error page
+    res.status(error.status || 500);
+    res.render('error', {Title:'Error', error});
+});
 
 app.listen(process.env.PORT, () => console.log('Server Running'))

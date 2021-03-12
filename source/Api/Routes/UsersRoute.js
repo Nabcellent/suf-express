@@ -14,10 +14,6 @@ router.route('/customer')
 
 
 
-router.get('/sign-out', (req, res) => {
-    req.logOut();
-    res.redirect('/auth/sign-in');
-});
 
 
 module.exports = router;

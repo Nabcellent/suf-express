@@ -10,7 +10,7 @@ $(() => {
                     if(subCategory.category_id === category.id) {
                         categoryOptions += `<option value="${subCategory.category_id}">${subCategory.title}</option>`
                     }
-                })
+                });
 
                 categoryOptions += '</optgroup>';
             })
