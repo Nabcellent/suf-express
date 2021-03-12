@@ -65,15 +65,16 @@
                     <div class="card crud_table shadow mb-4">
                         <div class="card-header d-flex flex-row align-items-center justify-content-between">
                             <h6 class="m-0 font-weight-bold text-primary"><i class="fab fa-opencart"></i> Product Variations</h6>
-                            <button class="btn btn-outline-primary" data-toggle="modal" data-target="#add_category">Add</button>
+                            <button class="btn btn-outline-primary" data-toggle="modal" data-target="#add_variation">Create</button>
                         </div>
                         <div class="card-body">
                             <table class="table table-borderless">
                                 <thead>
                                 <tr class="row">
                                     <th class="col-3" scope="col">Type</th>
-                                    <th class="col-6" scope="col">Images</th>
-                                    <th class="col-3" scope="col">Extra Price</th>
+                                    <th class="col-5" scope="col">Images</th>
+                                    <th class="col-2" scope="col">Extra Price</th>
+                                    <th class="col-2" scope="col">Actions</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -88,16 +89,21 @@
                                             <li>White</li>
                                         </ul>
                                     </td>
-                                    <td class="col-6">
+                                    <td class="col-5">
                                         <img src="/images/160-1606471_logo-java.png" alt="image"
-                                             class="img-fluid rounded-circle" style="width: 4rem; height: 4rem; object-fit: cover">
+                                             class="img-fluid rounded-circle" style="width: 3.7rem; height: 3.7rem; object-fit: cover">
                                         <img src="/images/160-1606471_logo-java.png" alt="image"
-                                             class="img-fluid rounded-circle" style="width: 4rem; height: 4rem; object-fit: cover">
+                                             class="img-fluid rounded-circle" style="width: 3.7rem; height: 3.7rem; object-fit: cover">
                                         <img src="/images/160-1606471_logo-java.png" alt="image"
-                                             class="img-fluid rounded-circle" style="width: 4rem; height: 4rem; object-fit: cover">
+                                             class="img-fluid rounded-circle" style="width: 3.7rem; height: 3.7rem; object-fit: cover">
                                     </td>
-                                    <td class="col-3">@mdo</td>
+                                    <td class="col-2">@mdo</td>
+                                    <td class="col-1">
+                                        <a href="#"><i class="fas fa-pen"></i></a>
+                                        <a href="#"><i class="fas fa-trash"></i></a>
+                                    </td>
                                 </tr>
+
                                 <tr class="row">
                                     <td class="col-3">
                                         <div class="div">
@@ -109,11 +115,15 @@
                                             <li>L</li>
                                         </ul>
                                     </td>
-                                    <td class="col-6">
+                                    <td class="col-5">
                                         <img src="/images/illustrations/undraw_web_developer_p3e5.svg" alt="image"
-                                             class="img-fluid rounded-circle" style="width: 4rem; height: 4rem; object-fit: cover">
+                                             class="img-fluid rounded-circle" style="width: 3.7rem; height: 3.7rem; object-fit: cover">
                                     </td>
-                                    <td class="col-3">@fat</td>
+                                    <td class="col-2">@fat</td>
+                                    <td class="col-1">
+                                        <a href="#"><i class="fas fa-pen"></i></a>
+                                        <a href="#"><i class="fas fa-trash"></i></a>
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -174,3 +184,5 @@
         </div>
     </div>
 </div>
+
+<%- include('./modals/details_modals') %>
