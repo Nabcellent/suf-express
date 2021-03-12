@@ -13,9 +13,14 @@ module.exports = {
             check('password')
                 .isLength({ min: 1 }).withMessage('Password min length is 3'),
             check('email').custom(async (value) => {
-                if(!await dbCheck.getCheckInstance().checkEmail(value))
+                if(!await dbCheck.getCheckInstance().checkEmail('users', 'email', value))
                     return true;
                 throw new Error('Email is in use!');
+            }),
+            check('phone').custom(async (value) => {
+                if(!await dbCheck.getCheckInstance().checkEmail('addresses', 'phone', value))
+                    return true;
+                throw new Error('Phone number is in use!');
             }),
             check('gender').custom((value) => {
                 if (value === "M" || value === "F")

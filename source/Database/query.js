@@ -26,12 +26,12 @@ class Check {
     }
 
     /****************************   CHECK EMAIL   */
-    async checkEmail(email) {
+    async checkEmail(table, column, value) {
         try {
             return await new Promise((resolve, reject) => {
-                let qry = "SELECT * FROM users WHERE email = ?";
+                let qry = `SELECT * FROM ${table} WHERE ${column} = ?`;
 
-                link.query(qry, [email], (err, result) => {
+                link.query(qry, [value], (err, result) => {
                     if(err) {
                         reject(new Error(err.message));
                     } else if(result.length > 0) {
@@ -111,7 +111,7 @@ const selectQryBuilder = (params) => {
         if(typeof params.columns == 'undefined' && params.columns == null) {
             qry = sql.select(params.table + '.*').from(params.table)
         } else {
-            qry = sql.select(params.table).from(params.table);
+            qry = sql.select(params.columns).from(params.table);
         }
     } else {
         if(params.columns !== 'undefined' && params.columns !== null) {

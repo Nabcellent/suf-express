@@ -4,7 +4,7 @@ const {dbCheck} = db = require('../Database/query');
 
 function initialize(passport) {
     const authenticateUser = async (email, password, done) => {
-        const user = await dbCheck.getCheckInstance().checkEmail(email);
+        const user = await dbCheck.getCheckInstance().checkEmail('users', 'email', email);
 
         if (!user) {
             return done(null, false);
@@ -24,7 +24,7 @@ function initialize(passport) {
     passport.use(new LocalStrategy({usernameField: 'email'}, authenticateUser));
     passport.serializeUser((user, done) => done(null, user.email));
     passport.deserializeUser(async (email, done) => {
-        done(null, await dbCheck.getCheckInstance().checkEmail(email));
+        done(null, await dbCheck.getCheckInstance().checkEmail('users', 'email', email));
     })
 }
 

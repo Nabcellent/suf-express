@@ -2,19 +2,17 @@ const ProductServices = require('../Services/ProductService');
 const moment = require('moment');
 const {dbRead} = require("../../Database/query");
 const {validationResult} = require("express-validator");
+const alert = require('../Helpers/alertMessage');
 
 module.exports = {
     createProduct: async(req, res) => {
         const errors = validationResult(req);
 
         if(!errors.isEmpty()) {
-            const alerts = errors.array()
+            const error = errors.array()[0];
+            alert(req, 'info', 'Something is missing!', error.msg);
 
-            return res.render('products/add_product', {
-                Title: 'Add Product',
-                layout: './layouts/nav',
-                alerts
-            });
+            return res.redirect('back');
         }
 
         if (!req.files || Object.keys(req.files).length === 0) {
@@ -37,18 +35,10 @@ module.exports = {
             await ProductServices.createProduct(title, seller, category, label, base_price, name, keywords, description)
                 .then(data => {
                     if(data === 1) {
-                        req.session.message = {
-                            type: 'success',
-                            intro: 'Success!',
-                            message: 'Product Inserted.'
-                        }
+                        alert(req, 'success', 'Success!', 'Product Created');
                         res.redirect('/products');
                     } else {
-                        req.session.message = {
-                            type: 'danger',
-                            intro: 'Error!',
-                            message: 'Unable to insert product.'
-                        }
+                        alert(req, 'danger', 'Error', 'Unable to add');
                         res.redirect('back');
                     }
                 }).catch(error => console.error(error));
@@ -155,7 +145,10 @@ module.exports = {
         const errors = validationResult(req);
 
         if(!errors.isEmpty()) {
-            return res.json({ errors: errors.array() });
+            const error = errors.array()[0];
+            alert(req, 'info', 'Something is amiss!', error.msg);
+
+            return res.redirect('back');
         }
 
         const {title, values} = req.body;
@@ -166,8 +159,10 @@ module.exports = {
             result
                 .then(data => {
                     if(data === 1) {
+                        alert(req, 'success', 'Success!', 'Attribute created.');
                         res.redirect('back');
                     } else {
+                        alert(req, 'danger', 'Error!', 'Unable to add.')
                         console.log(data);
                     }
                 }).catch(err => console.log(err));
@@ -195,7 +190,9 @@ module.exports = {
         const errors = validationResult(req);
 
         if(!errors.isEmpty()) {
-            return res.json({ errors: errors.array() });
+            const error = errors.array()[0];
+            alert(req, 'info', 'Something is missing!', error.msg);
+            return res.redirect('back');
         }
 
         const {title, categories} = req.body;
@@ -205,7 +202,12 @@ module.exports = {
 
             result
                 .then(data => {
-                    data === 1 ? res.redirect('back') : console.log(data);
+                    if(data === 1) {
+                        alert(req, 'success', 'Success!', 'Category Created.')
+                    } else {
+                        alert(req,'danger', 'Error!', 'Unable to add.')
+                    }
+                    res.redirect('back');
                 }).catch(err => console.log(err));
         } catch (error) {
             console.log(error);
@@ -226,7 +228,7 @@ module.exports = {
             })).forEach((row) => {data.categories.push(row)});
             (await dbRead.getReadInstance().getFromDb({
                 table: 'categories',
-                columns: 'id, title',
+                columns: 'title',
                 where: [['category_id', 'IS NOT', 'NULL']],
                 groupBy: ['title'],
             })).forEach((row) => {data.subCategories.push(row)});

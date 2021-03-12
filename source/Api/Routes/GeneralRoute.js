@@ -56,7 +56,7 @@ router.get('/dashboard', /*checkAuth,*/ async (req, res) => {
     try {
         const data = await getDashData();
 
-        res.render('pages/dashboard', {Title: 'Dashboard', layout: './layouts/nav', dashInfo: data});
+        res.render('dashboard', {Title: 'Dashboard', layout: './layouts/nav', dashInfo: data});
     } catch(error) {
         console.log(error);
     }
