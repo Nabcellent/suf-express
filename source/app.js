@@ -1,6 +1,7 @@
 const express = require('express');
 const favicon = require('serve-favicon');
 const createError = require('http-errors');
+const methodOverride = require('method-override');
 const app = express();
 const cors = require('cors');
 const dotenv = require('dotenv').config();
@@ -12,6 +13,7 @@ app.use(cors());
 app.use(express.urlencoded({extended: false})); //==    Parse URL-encoded bodies (as sent by HTML forms)
 app.use(express.json());    //==    Parse JSON bodies (as sent by API clients)
 app.use(bodyParser.json());
+app.use(methodOverride('_method'));
 app.use(fileUpload());
 
 

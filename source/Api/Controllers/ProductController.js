@@ -3,6 +3,7 @@ const moment = require('moment');
 const {dbRead} = require("../../Database/query");
 const {validationResult} = require("express-validator");
 const alert = require('../Helpers/alertMessage');
+const link = require("../../Config/database");
 
 module.exports = {
     createProduct: async(req, res) => {
@@ -87,6 +88,34 @@ module.exports = {
         }
     },
 
+    deleteProduct: (req, res) => {
+        try {
+            const deleteProduct = async () => {
+                return await new Promise((resolve, reject) => {
+                    link.query('DELETE FROM `products` WHERE `id` = ?', [req.body.product_id], (err, result) => {
+                        if(err) {
+                            reject(new Error(err.message));
+                        } else{
+                            resolve(result.affectedRows);
+                        }
+                    });
+                });
+            }
+
+            deleteProduct()
+                .then(data => {
+                    if(data === 1) {
+                        alert(req, 'success', '', 'Product Deleted!');
+                    } else {
+                        alert(req, 'danger', 'Error!', 'Something went wrong!');
+                    }
+                    res.redirect('back');
+                }).catch(error => console.log(error));
+        } catch(error) {
+            console.log(error);
+        }
+    },
+
     readCreateProduct: async(req, res) => {
         const data = async () => {
             return {
@@ -115,7 +144,7 @@ module.exports = {
         }
     },
 
-    readSingleProduct: async(req, res) => {
+    readDetails: async(req, res) => {
         const {id} = req.params;
         const productId = parseInt(id, 10);
         const results = {
@@ -135,10 +164,15 @@ module.exports = {
                 table: 'attributes',
                 columns: 'id, name'
             }),
-            variations: await dbRead.getReadInstance().getFromDb({
+            variations: (await dbRead.getReadInstance().getFromDb({
                 table: 'variations',
                 columns: 'variation',
                 where: [['product_id', '=', productId]]
+            })),
+            varOptions: await dbRead.getReadInstance().getFromDb({
+                table: 'variation_options',
+                columns: 'variation_options.id as varOptId, variation, variant, extra_price, image',
+                join: [['variations', 'variation_options.variation_id = variations.id']]
             })
         }
 
@@ -149,6 +183,7 @@ module.exports = {
             moment: moment,
         });
     },
+
 
 
     createVariation: async(req, res) => {
@@ -173,6 +208,29 @@ module.exports = {
                         alert(req, 'success', 'success!', 'Variation added.');
                     } else {
                         alert(req, 'danger', 'Error!', 'Unable to add variation');
+                    }
+
+                    res.redirect('back');
+                }).catch((error) => {
+                    console.log(error);
+                    alert(req, 'danger', 'Error!', 'Something went Wrong. Contact Admin');
+            });
+        } catch (error) {
+            alert(req, 'danger', 'Error!', 'Something went Wrong. Contact Admin');
+            console.log(error);
+        }
+    },
+
+    updateVariationPrice: async(req, res) => {
+        const {extra_price, variation_id} = req.body;
+
+        try {
+            ProductServices.updateVariationPrice(variation_id, extra_price)
+                .then((data) => {
+                    if(data === 1) {
+                        alert(req, 'success', 'success!', 'Price Set.');
+                    } else {
+                        alert(req, 'danger', 'Error!', 'Unable to set price');
                     }
 
                     res.redirect('back');

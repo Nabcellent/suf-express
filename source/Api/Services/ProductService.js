@@ -144,5 +144,24 @@ module.exports = {
         } catch(error) {
             console.log(error);
         }
+    },
+
+
+
+    updateVariationPrice: async(id, Price) => {
+        try {
+            return await new Promise((resolve, reject) => {
+                console.log(id)
+                const qry = `UPDATE variation_options SET extra_price = ? WHERE id = ?`;
+
+                link.query(qry, [Price, id], (error, result) => {
+                    if(error)
+                        reject(new Error(error.message));
+                    resolve(result.affectedRows);
+                })
+            })
+        } catch(error) {
+            console.log(error);
+        }
     }
 }

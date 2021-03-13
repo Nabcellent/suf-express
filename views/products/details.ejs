@@ -84,7 +84,6 @@
 
                                 <% details.variations.forEach((variation) => {
                                     const attribute = Object.keys(JSON.parse(variation.variation))[0];
-                                    const values = JSON.parse(variation.variation)[attribute];
                                 %>
                                     <tr>
                                         <td class="pb-0 pt-1">
@@ -97,34 +96,26 @@
                                                 </thead>
                                                 <tbody>
 
-                                                    <% if(Array.isArray(values)) {
-                                                    values.forEach(value => { %>
+                                                    <% details.varOptions.forEach(varOpt => {
+                                                            let varOptAttribute = Object.keys(JSON.parse(varOpt.variation))[0];
+                                                            if(varOptAttribute === attribute) { %>
                                                         <tr class="row">
-                                                            <td class="col-5"><%= value %></td>
+                                                            <td class="col-5"><%= varOpt.variant %></td>
                                                             <td class="col-6">
                                                                 <div class="row">
-                                                                    <div class="col">0.00/-</div>
-                                                                    <div class="col"><a href="#">set price</a></div>
+                                                                    <div class="col"><%= parseFloat(varOpt.extra_price).toFixed(2) %>/-</div>
+                                                                    <div class="col">
+                                                                        <a href="#" data-id="<%= varOpt.varOptId %>" class="extra_price"
+                                                                        data-toggle="modal" data-target="#set_price">set price</a>
+                                                                    </div>
                                                                     <div class="col">
                                                                         <a href="#"><i class="fas fa-pen-fancy"></i> Image</a>
                                                                     </div>
                                                                 </div>
                                                             </td>
                                                         </tr>
-                                                    <%})} else { %>
-                                                        <tr class="row">
-                                                            <td class="col-5"><%= values %></td>
-                                                            <td class="col-6">
-                                                                <div class="row">
-                                                                    <div class="col">0.00/-</div>
-                                                                    <div class="col"><a href="#">change price</a></div>
-                                                                    <div class="col">
-                                                                        <a href="#"><i class="fas fa-pen-fancy"></i> Image</a>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    <%} %>
+                                                    <% }
+                                                    })%>
 
                                                 </tbody>
                                             </table>

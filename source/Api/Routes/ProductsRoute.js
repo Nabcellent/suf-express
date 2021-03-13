@@ -5,14 +5,15 @@ const {ProductValidation, VariationValidation} = require("../Validations");
 
 router
     .route('/')
-    .get(ProductController.readProducts);
+    .get(ProductController.readProducts)
+    .delete(ProductController.deleteProduct)
+    .post(ProductValidation.create(), ProductController.createProduct);
 
 router
     .route('/create')
     .get((req, res) => {
         res.render('products/add_product', {Title: 'Add Product', layout: './layouts/nav'});
     })
-    .post(ProductValidation.create(), ProductController.createProduct);
 
 router
     .route('/create/info')
@@ -20,11 +21,15 @@ router
 
 
 
+/***    DETAILS ROUTE
+ * ***************************************************************/
 router
     .route('/details/all/:id')
-    .get(ProductController.readSingleProduct);
+    .get(ProductController.readDetails);
 
 router.post('/details/variation/create/:id', VariationValidation.create(), ProductController.createVariation);
+
+router.post('/details/variation/set-price', ProductController.updateVariationPrice);
 
 
 
