@@ -12,7 +12,10 @@ module.exports = {
 
     update: () => {
         return [
-            check("name", "Name is required").not().isEmpty(),
+            check("title", "Title is required")
+                .not().isEmpty(),
+            check("seller", "Seller is required")
+                .not().isEmpty()
         ]
     }
 }

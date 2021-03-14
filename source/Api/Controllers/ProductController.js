@@ -2,8 +2,7 @@ const ProductServices = require('../Services/ProductService');
 const moment = require('moment');
 const {dbRead} = require("../../Database/query");
 const {validationResult} = require("express-validator");
-const alert = require('../Helpers/alertMessage');
-const link = require("../../Config/database");
+const {alertHelper, validationHelper} = require('../Helpers');
 
 module.exports = {
     createProduct: async(req, res) => {
@@ -11,7 +10,7 @@ module.exports = {
 
         if(!errors.isEmpty()) {
             const error = errors.array()[0];
-            alert(req, 'info', 'Something is missing!', error.msg);
+            alertHelper(req, 'info', 'Something is missing!', error.msg);
 
             return res.redirect('back');
         }
@@ -36,10 +35,10 @@ module.exports = {
             await ProductServices.createProduct(title, seller, category, label, base_price, name, keywords, description)
                 .then(data => {
                     if(data === 1) {
-                        alert(req, 'success', 'Success!', 'Product Created');
+                        alertHelper(req, 'success', 'Success!', 'Product Created');
                         res.redirect('/products');
                     } else {
-                        alert(req, 'danger', 'Error', 'Unable to add');
+                        alertHelper(req, 'danger', 'Error', 'Unable to add');
                         res.redirect('back');
                     }
                 }).catch(error => console.error(error));
@@ -88,35 +87,49 @@ module.exports = {
         }
     },
 
-    deleteProduct: (req, res) => {
-        try {
-            const deleteProduct = async () => {
-                return await new Promise((resolve, reject) => {
-                    link.query('DELETE FROM `products` WHERE `id` = ?', [req.body.product_id], (err, result) => {
-                        if(err) {
-                            reject(new Error(err.message));
-                        } else{
-                            resolve(result.affectedRows);
-                        }
-                    });
-                });
-            }
+    updateProduct: async(req, res) => {
+        if(!await validationHelper.validate(req, res)) {
+            const {
+                title, label, seller, category, keywords, base_price, sale_price, description, product_id
+            } = req.body;
 
-            deleteProduct()
+            try {
+                ProductServices.updateProduct(product_id, category, seller, title, keywords, description, label, base_price, sale_price)
+                    .then((data) => {
+                        if(data === 1) {
+                            alertHelper(req, 'success', '', 'Product Updated!');
+                        } else {
+                            alertHelper(req, 'danger', 'Error!', 'Something went wrong!');
+                        }
+                        res.redirect('back');
+                    }).catch(error => console.log(error));
+            } catch(error) {
+                console.log(error);
+                alertHelper(req, 'danger', 'Error!', 'Something went wrong!');
+                res.redirect('back');
+            }
+        }
+    },
+
+    deleteProduct: async(req, res) => {
+        try {
+            ProductServices.deleteProduct(req.body.product_id)
                 .then(data => {
                     if(data === 1) {
-                        alert(req, 'success', '', 'Product Deleted!');
+                        alertHelper(req, 'success', '', 'Product Deleted!');
                     } else {
-                        alert(req, 'danger', 'Error!', 'Something went wrong!');
+                        alertHelper(req, 'danger', 'Error!', 'Something went wrong!');
                     }
                     res.redirect('back');
                 }).catch(error => console.log(error));
         } catch(error) {
             console.log(error);
+            alertHelper(req, 'danger', 'Error!', 'Something went wrong!');
+            res.redirect('back');
         }
     },
 
-    readCreateProduct: async(req, res) => {
+    readProductCreate: async(req, res) => {
         const data = async () => {
             return {
                 categories: await dbRead.getReadInstance().getFromDb({
@@ -151,8 +164,8 @@ module.exports = {
             product: await dbRead.getReadInstance().getFromDb({
                 table: 'products',
                 columns: 'products.id, products.title as product_title, main_image, keywords, ' +
-                    'label, base_price, sale_price, products.created_at, description, ' +
-                    'categories.title as category_title, users.last_name',
+                    'label, base_price, sale_price, products.created_at, products.updated_at, description, ' +
+                    'categories.id as category_id, categories.title as category_title, users.id as user_id, first_name, last_name',
                 join: [
                     ['categories', 'products.category_id = categories.id'],
                     ['users', 'products.seller_id = users.id']
@@ -177,10 +190,8 @@ module.exports = {
         }
 
         res.render('products/details', {
-            Title: 'some product',
-            layout: './layouts/nav',
-            details: results,
-            moment: moment,
+            Title: 'some product',      layout: './layouts/nav',
+            details: results,           moment: moment,
         });
     },
 
@@ -191,7 +202,7 @@ module.exports = {
 
         if(!errors.isEmpty()) {
             const error = errors.array()[0];
-            alert(req, 'info', 'Something is missing!', error.msg);
+            alertHelper(req, 'info', 'Something is missing!', error.msg);
 
             return res.redirect('back');
         }
@@ -205,18 +216,18 @@ module.exports = {
                 .then((data) => {
                     if(data.affectedRows === 1) {
                         ProductServices.createVariationOptions(data.insertId, variation_values);
-                        alert(req, 'success', 'success!', 'Variation added.');
+                        alertHelper(req, 'success', 'success!', 'Variation added.');
                     } else {
-                        alert(req, 'danger', 'Error!', 'Unable to add variation');
+                        alertHelper(req, 'danger', 'Error!', 'Unable to add variation');
                     }
 
                     res.redirect('back');
                 }).catch((error) => {
                     console.log(error);
-                    alert(req, 'danger', 'Error!', 'Something went Wrong. Contact Admin');
+                    alertHelper(req, 'danger', 'Error!', 'Something went Wrong. Contact Admin');
             });
         } catch (error) {
-            alert(req, 'danger', 'Error!', 'Something went Wrong. Contact Admin');
+            alertHelper(req, 'danger', 'Error!', 'Something went Wrong. Contact Admin');
             console.log(error);
         }
     },
@@ -228,18 +239,18 @@ module.exports = {
             ProductServices.updateVariationPrice(variation_id, extra_price)
                 .then((data) => {
                     if(data === 1) {
-                        alert(req, 'success', 'success!', 'Price Set.');
+                        alertHelper(req, 'success', 'success!', 'Price Set.');
                     } else {
-                        alert(req, 'danger', 'Error!', 'Unable to set price');
+                        alertHelper(req, 'danger', 'Error!', 'Unable to set price');
                     }
 
                     res.redirect('back');
                 }).catch((error) => {
                     console.log(error);
-                    alert(req, 'danger', 'Error!', 'Something went Wrong. Contact Admin');
+                    alertHelper(req, 'danger', 'Error!', 'Something went Wrong. Contact Admin');
             });
         } catch (error) {
-            alert(req, 'danger', 'Error!', 'Something went Wrong. Contact Admin');
+            alertHelper(req, 'danger', 'Error!', 'Something went Wrong. Contact Admin');
             console.log(error);
         }
     },
@@ -251,7 +262,7 @@ module.exports = {
 
         if(!errors.isEmpty()) {
             const error = errors.array()[0];
-            alert(req, 'info', 'Something is amiss!', error.msg);
+            alertHelper(req, 'info', 'Something is amiss!', error.msg);
 
             return res.redirect('back');
         }
@@ -264,15 +275,15 @@ module.exports = {
             result
                 .then(data => {
                     if(data === 1) {
-                        alert(req, 'success', 'Success!', 'Attribute created.');
+                        alertHelper(req, 'success', 'Success!', 'Attribute created.');
                         res.redirect('back');
                     } else {
-                        alert(req, 'danger', 'Error!', 'Unable to add.')
+                        alertHelper(req, 'danger', 'Error!', 'Unable to add.')
                         console.log(data);
                     }
                 }).catch(err => console.log(err));
         } catch (error) {
-            alert(req, 'danger', 'Error!', 'Something went Wrong. Contact Admin');
+            alertHelper(req, 'danger', 'Error!', 'Something went Wrong. Contact Admin');
             console.error(error);
         }
     },
@@ -296,7 +307,7 @@ module.exports = {
 
         if(!errors.isEmpty()) {
             const error = errors.array()[0];
-            alert(req, 'info', 'Something is missing!', error.msg);
+            alertHelper(req, 'info', 'Something is missing!', error.msg);
             return res.redirect('back');
         }
 
@@ -308,9 +319,9 @@ module.exports = {
             result
                 .then(data => {
                     if(data === 1) {
-                        alert(req, 'success', 'Success!', 'Category Created.')
+                        alertHelper(req, 'success', 'Success!', 'Category Created.')
                     } else {
-                        alert(req,'danger', 'Error!', 'Unable to add.')
+                        alertHelper(req,'danger', 'Error!', 'Unable to add.')
                     }
                     res.redirect('back');
                 }).catch(err => console.log(err));

@@ -42,9 +42,9 @@
 
 <!--&&&===    SET PRICE MODAL    ===&&&-->
 <div class="modal fade" id="set_price" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog">
         <div class="modal-content">
-            <form action="/products/details/variation/set-price" method="POST">
+            <form action="/products/details/variation/set-price?_method=PUT" method="POST">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Extra Price</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -58,6 +58,80 @@
                     <input type="hidden" id="variation_id" name="variation_id">
                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Set</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!--&&&===    EDIT PRODUCT TABLE    ===&&&-->
+<div class="modal fade" id="edit_product_table" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form action="/products?_method=PUT" method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Product</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="mb-0">Title</label>
+                            <input type="text" name="title" class="form-control crud_form" value="<%= details.product[0].product_title %>"
+                                   placeholder="Title" aria-label>
+                        </div>
+                        <div class="form-group col">
+                            <label class="mb-0">Label</label>
+                            <input type="text" name="label" class="form-control crud_form" value="<%= details.product[0].label %>"
+                                   placeholder="Label" aria-label>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="mb-0">Seller</label>
+                            <select id="sellers_s2" name="seller" class="form-control crud_form" aria-label required>
+                                <option selected hidden value="<%= details.product[0].user_id %>">
+                                    <%= details.product[0].last_name %> <%= details.product[0].first_name %></option>
+                            </select>
+                        </div>
+                        <div class="form-group col">
+                            <label class="mb-0">Category</label>
+                            <select id="categories_s2" class="form-control crud_form" name="category" aria-label required>
+                                <option selected hidden value="<%= details.product[0].category_id %>">
+                                    <%= details.product[0].category_title %></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="mb-0">Keywords</label>
+                        <input type="text" name="keywords" class="form-control crud_form" value="<%= details.product[0].keywords %>"
+                               placeholder="Keywords" aria-label>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="mb-0">Base Price</label>
+                            <input type="number" name="base_price" class="form-control crud_form" value="<%= details.product[0].base_price %>"
+                                   placeholder="Base price" aria-label>
+                        </div>
+                        <div class="form-group col">
+                            <label class="mb-0">Sale Price</label>
+                            <input type="number" name="sale_price" class="form-control crud_form" value="<%= details.product[0].sale_price %>"
+                                   placeholder="Sale price" aria-label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="mb-0">Description</label>
+                        <textarea  name="description" class="form-control crud_form"
+                                   rows="4" placeholder="Description..." aria-label><%= details.product[0].description %></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="product_id" value="<%= details.product[0].id %>">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
                 </div>
             </form>
         </div>

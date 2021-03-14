@@ -2,6 +2,9 @@ const link = require("../../Config/database");
 const date = new Date();
 
 module.exports = {
+    /*********
+     * CREATE
+     * ********/
     createCategory: async(title, categoryId) => {
         try {
             return await new Promise((resolve, reject) => {
@@ -147,6 +150,33 @@ module.exports = {
     },
 
 
+    /*********
+     * UPDATE
+     * ********/
+    updateProduct: async(id, category_id, seller_id, title, keywords, description, label, base_price, sale_price) => {
+        try {
+            const VALUES = [
+                category_id,    seller_id,      title,
+                keywords,       description,    label,
+                base_price,     sale_price,     date,
+                id
+            ]
+
+            return await new Promise((resolve, reject) => {
+                const qry = `UPDATE products SET category_id = ?, seller_id = ?, title = ?, 
+                    keywords = ?, description = ?, label = ?, base_price = ?, sale_price = ?, updated_at = ?
+                    WHERE id = ?`;
+
+                link.query(qry, VALUES, (err, result) => {
+                    if(err)
+                        reject(new Error(err.message));
+                    resolve(result.changedRows);
+                })
+            })
+        } catch(error) {
+            console.log(error);
+        }
+    },
 
     updateVariationPrice: async(id, Price) => {
         try {
@@ -157,11 +187,31 @@ module.exports = {
                 link.query(qry, [Price, id], (error, result) => {
                     if(error)
                         reject(new Error(error.message));
-                    resolve(result.affectedRows);
+                    resolve(result.changedRows);
                 })
             })
         } catch(error) {
             console.log(error);
+        }
+    },
+
+
+    /*********
+     * DELETE
+     * ********/
+    deleteProduct: async (id) => {
+        try {
+            return await new Promise((resolve, reject) => {
+                link.query('DELETE FROM `products` WHERE `id` = ?', [id], (err, result) => {
+                    if(err) {
+                        reject(new Error(err.message));
+                    } else{
+                        resolve(result.affectedRows);
+                    }
+                });
+            });
+        } catch (error) {
+            console.log(error)
         }
     }
 }

@@ -6,8 +6,9 @@ const {ProductValidation, VariationValidation} = require("../Validations");
 router
     .route('/')
     .get(ProductController.readProducts)
-    .delete(ProductController.deleteProduct)
-    .post(ProductValidation.create(), ProductController.createProduct);
+    .post(ProductValidation.create(), ProductController.createProduct)
+    .put(ProductValidation.update(), ProductController.updateProduct)
+    .delete(ProductController.deleteProduct);
 
 router
     .route('/create')
@@ -17,7 +18,7 @@ router
 
 router
     .route('/create/info')
-    .get(ProductController.readCreateProduct);
+    .get(ProductController.readProductCreate);
 
 
 
@@ -29,7 +30,7 @@ router
 
 router.post('/details/variation/create/:id', VariationValidation.create(), ProductController.createVariation);
 
-router.post('/details/variation/set-price', ProductController.updateVariationPrice);
+router.put('/details/variation/set-price', ProductController.updateVariationPrice);
 
 
 

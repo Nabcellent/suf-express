@@ -24,21 +24,6 @@
                             </div>
                         </div>
                         <div class="card-body crud_form">
-
-                            <% if(typeof alerts !== 'undefined') { %>
-                                <div class="alert alert-info alert-dismissible fade show my-1 py-2" role="alert">
-                                    <strong>Holy guacamole!</strong>
-                                    <ul class="m-0">
-                                        <% alerts.forEach((error) => { %>
-                                            <li><%= error.msg %></li>
-                                        <% }) %>
-                                    </ul>
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                            <% } %>
-
                             <form action="/products" method="POST" enctype="multipart/form-data">
                                 <div class="form-group">
                                     <input type="text" name="title" class="form-control mt-2 crud_form"
@@ -48,11 +33,13 @@
                                     <div class="form-group col">
                                         <label></label>
                                         <select id="sellers_s2" name="seller" class="form-control crud_form" aria-label required>
+                                            <option selected hidden value="">Select a seller*</option>
                                         </select>
                                     </div>
                                     <div class="form-group col">
                                         <label></label>
                                         <select id="categories_s2" class="form-control crud_form" name="category" aria-label required>
+                                            <option selected hidden value="">Select a category *</option>
                                         </select>
                                     </div>
                                 </div>

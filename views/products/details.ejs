@@ -8,7 +8,7 @@
                     <div class="card bg-primary text-white crud_table shadow mb-4">
                         <div class="card-header d-flex flex-row align-items-center justify-content-between">
                             <h6 class="m-0 font-weight-bold"><i class="fab fa-opencart"></i> Product Details</h6>
-                            <button class="btn btn-outline-light" data-toggle="modal" data-target="#add_category">Edit</button>
+                            <button class="btn btn-outline-light" data-toggle="modal" data-target="#edit_product_table">Edit</button>
                         </div>
                         <div class="card-body">
                             <div class="row no-gutters">
@@ -50,7 +50,24 @@
                                             </tr>
                                             </tbody>
                                         </table>
-                                        Date Created: <%= moment(details.product[0].created_at).format('DD-MM-YYYY') %>
+                                        <div class="row">
+                                            <div class="col">
+                                                <p class="m-0">
+                                                    Date Created:
+                                                </p>
+                                                <p class="m-0">
+                                                    Date Updated:
+                                                </p>
+                                            </div>
+                                            <div class="col">
+                                                <p class="m-0">
+                                                    <%= moment(details.product[0].created_at).format('DD-MM-YYYY') %>
+                                                </p>
+                                                <p class="m-0">
+                                                    <%= moment(details.product[0].updated_at).format('DD-MM-YYYY') %>
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
