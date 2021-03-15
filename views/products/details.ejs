@@ -2,13 +2,13 @@
 
 <div id="details" class="container-fluid px-0">
     <div class="row">
-        <div class="col-10">
+        <div class="col">
             <div class="row">
-                <div class="col-5 pr-1">
+                <div class="col-5 pr-md-1">
                     <div class="card bg-primary text-white crud_table shadow mb-4">
                         <div class="card-header d-flex flex-row align-items-center justify-content-between">
                             <h6 class="m-0 font-weight-bold"><i class="fab fa-opencart"></i> Product Details</h6>
-                            <button class="btn btn-outline-light" data-toggle="modal" data-target="#edit_product_table">Edit</button>
+                            <button class="btn btn-outline-light" data-toggle="modal" data-target="#edit_product_modal">Edit</button>
                         </div>
                         <div class="card-body">
                             <div class="row no-gutters">
@@ -82,7 +82,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-7 pl-1 pr-0">
+                <div class="col-5 pl-md-1 pr-md-0">
                     <div class="card crud_table shadow mb-4">
                         <div class="card-header d-flex flex-row align-items-center justify-content-between">
                             <h6 class="m-0 font-weight-bold text-primary"><i class="fab fa-opencart"></i> Product Variations</h6>
@@ -157,10 +157,75 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-2">
+                    <div class="card crud_table shadow mb-4">
+                        <div class="card-body">
+                            <div class="list-group list-group-flush">
+                                <a href="/products" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                    All Products<span class="badge badge-primary badge-pill">14</span>
+                                </a>
+                                <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                    Orders<span class="badge badge-primary badge-pill">7</span>
+                                </a>
+                                <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                    Quantity Sold<span class="badge badge-primary badge-pill">17</span>
+                                </a>
+                                <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                    Remaining stock<span class="badge badge-primary badge-pill">37</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="row">
-                <div class="col-9">
+                <div class="col-5 pr-md-1">
+                    <div class="card crud_table shadow mb-4">
+                        <div class="card-header d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-info"><i class="fab fa-opencart"></i> Image List</h6>
+                            <button class="btn btn-outline-info" data-toggle="modal" data-target="#add_image_modal">Upload</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-borderless table-hover crud_table" id="categories_table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Image</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    <% details.images.forEach((image, i) => { %>
+                                        <tr>
+                                            <td><%= i + 1 %></td>
+                                            <td><img src="/images/products/<%= image.image %>" alt="image" class="img-fluid"></td>
+                                            <td class="action">
+                                                <% if(image.status === 1) { %>
+                                                    <a href="#" class="mr-4" data-id="<%= image.id %>" title="Update Status">
+                                                        Active
+                                                    </a>
+                                                <% } else { %>
+                                                        <a href="#" class="mr-3" data-id="<%= image.id %>" title="Update Status">
+                                                            Inactive
+                                                        </a>
+                                                <% } %>
+                                                <a href="#" class="" title="Remove" data-id="<%= image.id %>">
+                                                    <i class="fas fa-trash text-danger"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-7 pl-md-1">
                     <div class="card text-white bg-dark crud_table shadow mb-4">
                         <div class="card-header d-flex flex-row align-items-center justify-content-between">
                             <h6 class="m-0 font-weight-bold text-info"><i class="fab fa-opencart"></i> Product Images</h6>
@@ -183,32 +248,12 @@
                                 <div class="swiper-button-next"></div>
                                 <div class="swiper-button-prev"></div>
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-2">
-            <div class="card crud_table shadow mb-4">
-                <div class="card-body">
-                    <div class="list-group list-group-flush">
-                        <a href="/products" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            All Products<span class="badge badge-primary badge-pill">14</span>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            Orders<span class="badge badge-primary badge-pill">7</span>
-                        </a>
-                        <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            Quantity Sold<span class="badge badge-primary badge-pill">17</span>
-                        </a>
-                        <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            Remaining stock<span class="badge badge-primary badge-pill">37</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+
     </div>
 </div>
 

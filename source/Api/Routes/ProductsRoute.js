@@ -32,6 +32,8 @@ router.post('/details/variation/create/:id', VariationValidation.create(), Produ
 
 router.put('/details/variation/set-price', ProductController.updateVariationPrice);
 
+router.post('/details/images', ProductController.createImage);
+
 
 
 router

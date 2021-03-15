@@ -157,6 +157,8 @@ module.exports = {
         }
     },
 
+
+
     readDetails: async(req, res) => {
         const {id} = req.params;
         const productId = parseInt(id, 10);
@@ -168,10 +170,17 @@ module.exports = {
                     'categories.id as category_id, categories.title as category_title, users.id as user_id, first_name, last_name',
                 join: [
                     ['categories', 'products.category_id = categories.id'],
-                    ['users', 'products.seller_id = users.id']
+                    ['users', 'products.seller_id = users.id'],
+                    ['product_images', 'products.id = product_images.product_id']
                 ],
                 where: [['products.id', '=', productId]],
                 limit: 1
+            }),
+            images: await dbRead.getReadInstance().getFromDb({
+                table: "products",
+                columns: 'product_images.id, image, status',
+                join: [['product_images', 'products.id = product_images.product_id']],
+                where: [['products.id', '=', productId]]
             }),
             attributes: await dbRead.getReadInstance().getFromDb({
                 table: 'attributes',
@@ -189,13 +198,13 @@ module.exports = {
             })
         }
 
+        //return res.json(results.images);
+
         res.render('products/details', {
             Title: 'some product',      layout: './layouts/nav',
             details: results,           moment: moment,
         });
     },
-
-
 
     createVariation: async(req, res) => {
         const errors = validationResult(req);
@@ -253,6 +262,14 @@ module.exports = {
             alertHelper(req, 'danger', 'Error!', 'Something went Wrong. Contact Admin');
             console.log(error);
         }
+    },
+
+    createImage: async(req, res) => {
+        if (!req.files || Object.keys(req.files).length === 0) {
+            return res.status(400).send('No files were uploaded.');
+        }
+
+        res.json(req.files);
     },
 
 
