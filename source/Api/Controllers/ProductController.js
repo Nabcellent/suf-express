@@ -2,7 +2,9 @@ const ProductServices = require('../Services/ProductService');
 const moment = require('moment');
 const {dbRead} = require("../../Database/query");
 const {validationResult} = require("express-validator");
-const {alertHelper, validationHelper} = require('../Helpers');
+const {alert, validationHelper} = require('../Helpers');
+const fs = require("fs")
+
 
 module.exports = {
     createProduct: async(req, res) => {
@@ -10,7 +12,7 @@ module.exports = {
 
         if(!errors.isEmpty()) {
             const error = errors.array()[0];
-            alertHelper(req, 'info', 'Something is missing!', error.msg);
+            alert(req, 'info', 'Something is missing!', error.msg);
 
             return res.redirect('back');
         }
@@ -20,6 +22,7 @@ module.exports = {
         }
         const {main_image} = req.files;
         let {name} = main_image;
+        name = Math.floor((Math.random() * 1199999) + 1) + name;
 
         await main_image.mv('public/images/products/' + name, (error) => {
             if(error) {
@@ -35,10 +38,10 @@ module.exports = {
             await ProductServices.createProduct(title, seller, category, label, base_price, name, keywords, description)
                 .then(data => {
                     if(data === 1) {
-                        alertHelper(req, 'success', 'Success!', 'Product Created');
+                        alert(req, 'success', 'Success!', 'Product Created');
                         res.redirect('/products');
                     } else {
-                        alertHelper(req, 'danger', 'Error', 'Unable to add');
+                        alert(req, 'danger', 'Error', 'Unable to add');
                         res.redirect('back');
                     }
                 }).catch(error => console.error(error));
@@ -97,34 +100,45 @@ module.exports = {
                 ProductServices.updateProduct(product_id, category, seller, title, keywords, description, label, base_price, sale_price)
                     .then((data) => {
                         if(data === 1) {
-                            alertHelper(req, 'success', '', 'Product Updated!');
+                            alert(req, 'success', '', 'Product Updated!');
                         } else {
-                            alertHelper(req, 'danger', 'Error!', 'Something went wrong!');
+                            alert(req, 'danger', 'Error!', 'Something went wrong!');
                         }
                         res.redirect('back');
                     }).catch(error => console.log(error));
             } catch(error) {
                 console.log(error);
-                alertHelper(req, 'danger', 'Error!', 'Something went wrong!');
+                alert(req, 'danger', 'Error!', 'Something went wrong!');
                 res.redirect('back');
             }
         }
     },
 
     deleteProduct: async(req, res) => {
+        const {product_id, image_name} = req.body;
+        const imagePath = 'public/images/products/' + image_name;
+
         try {
-            ProductServices.deleteProduct(req.body.product_id)
+            ProductServices.deleteProduct(product_id)
                 .then(data => {
                     if(data === 1) {
-                        alertHelper(req, 'success', '', 'Product Deleted!');
+                        fs.unlink(imagePath, function(err) {
+                            if (err) {
+                                throw err
+                            } else {
+                                alert(req, 'success', '', 'Product Deleted!');
+                            }
+                            res.redirect('back');
+                        })
                     } else {
-                        alertHelper(req, 'danger', 'Error!', 'Something went wrong!');
+                        alert(req, 'danger', 'Error!', 'Something went wrong!');
+                        console.log(data);
+                        res.redirect('back');
                     }
-                    res.redirect('back');
                 }).catch(error => console.log(error));
         } catch(error) {
             console.log(error);
-            alertHelper(req, 'danger', 'Error!', 'Something went wrong!');
+            alert(req, 'danger', 'Error!', 'Something went wrong!');
             res.redirect('back');
         }
     },
@@ -157,9 +171,7 @@ module.exports = {
         }
     },
 
-
-
-    readDetails: async(req, res) => {
+    readProductDetails: async(req, res) => {
         const {id} = req.params;
         const productId = parseInt(id, 10);
         const results = {
@@ -170,8 +182,7 @@ module.exports = {
                     'categories.id as category_id, categories.title as category_title, users.id as user_id, first_name, last_name',
                 join: [
                     ['categories', 'products.category_id = categories.id'],
-                    ['users', 'products.seller_id = users.id'],
-                    ['product_images', 'products.id = product_images.product_id']
+                    ['users', 'products.seller_id = users.id']
                 ],
                 where: [['products.id', '=', productId]],
                 limit: 1
@@ -198,20 +209,20 @@ module.exports = {
             })
         }
 
-        //return res.json(results.images);
-
         res.render('products/details', {
             Title: 'some product',      layout: './layouts/nav',
             details: results,           moment: moment,
         });
     },
 
+
+
     createVariation: async(req, res) => {
         const errors = validationResult(req);
 
         if(!errors.isEmpty()) {
             const error = errors.array()[0];
-            alertHelper(req, 'info', 'Something is missing!', error.msg);
+            alert(req, 'info', 'Something is missing!', error.msg);
 
             return res.redirect('back');
         }
@@ -225,18 +236,18 @@ module.exports = {
                 .then((data) => {
                     if(data.affectedRows === 1) {
                         ProductServices.createVariationOptions(data.insertId, variation_values);
-                        alertHelper(req, 'success', 'success!', 'Variation added.');
+                        alert(req, 'success', 'success!', 'Variation added.');
                     } else {
-                        alertHelper(req, 'danger', 'Error!', 'Unable to add variation');
+                        alert(req, 'danger', 'Error!', 'Unable to add variation');
                     }
 
                     res.redirect('back');
                 }).catch((error) => {
                     console.log(error);
-                    alertHelper(req, 'danger', 'Error!', 'Something went Wrong. Contact Admin');
+                    alert(req, 'danger', 'Error!', 'Something went Wrong. Contact Admin');
             });
         } catch (error) {
-            alertHelper(req, 'danger', 'Error!', 'Something went Wrong. Contact Admin');
+            alert(req, 'danger', 'Error!', 'Something went Wrong. Contact Admin');
             console.log(error);
         }
     },
@@ -248,18 +259,18 @@ module.exports = {
             ProductServices.updateVariationPrice(variation_id, extra_price)
                 .then((data) => {
                     if(data === 1) {
-                        alertHelper(req, 'success', 'success!', 'Price Set.');
+                        alert(req, 'success', 'success!', 'Price Set.');
                     } else {
-                        alertHelper(req, 'danger', 'Error!', 'Unable to set price');
+                        alert(req, 'danger', 'Error!', 'Unable to set price');
                     }
 
                     res.redirect('back');
                 }).catch((error) => {
                     console.log(error);
-                    alertHelper(req, 'danger', 'Error!', 'Something went Wrong. Contact Admin');
+                    alert(req, 'danger', 'Error!', 'Something went Wrong. Contact Admin');
             });
         } catch (error) {
-            alertHelper(req, 'danger', 'Error!', 'Something went Wrong. Contact Admin');
+            alert(req, 'danger', 'Error!', 'Something went Wrong. Contact Admin');
             console.log(error);
         }
     },
@@ -269,7 +280,99 @@ module.exports = {
             return res.status(400).send('No files were uploaded.');
         }
 
-        res.json(req.files);
+        const {product_id} = req.body;
+
+        let images = req.files['images[]'];
+        images = (Array.isArray(images)) ? images : [images];
+
+        try {
+            const insertImages = async () => {
+                for (let image of images) {
+                    let {name} = image;
+
+                    name = Math.floor((Math.random() * 1199999) + 1) + name;
+
+                    await image.mv('public/images/products/' + name, error => {
+                        if(error) {
+                            return res.send(error);
+                        }
+                    })
+
+                    ProductServices.createImage(product_id, name)
+                        .then(data => {
+                            if(data !== 1) {
+                                return data;
+                            }
+                        }).catch(error => {
+                        console.log(error)
+                        return error.message;
+                    });
+                }
+
+                return true;
+            }
+
+            if(await insertImages()) {
+                alert(req, 'success', 'Success!', 'Image(s) uploaded.');
+            } else {
+                alert(req, 'danger', 'Error!', 'Unable to upload image(s).');
+            }
+            res.redirect('back');
+        } catch(error) {
+            console.log(error);
+            alert(req, 'danger', 'Error!', 'Something went wrong');
+        }
+    },
+
+    updateImageStatus: async(req, res) => {
+        const {status, image_id} = req.body;
+
+        let newStatus = (status === 'Active') ? 0 : 1;
+
+        try {
+            ProductServices.updateImageStatus(image_id, newStatus)
+                .then((data) => {
+                    if(data === 1) {
+                        alert(req, 'success', '', 'Status Updated!');
+                        return res.json({status: newStatus});
+                    } else {
+                        alert(req, 'danger', 'Error!', 'Something went wrong!');
+                        return res.json({errors: {message: 'Internal error. Contact Admin'}});
+                    }
+                }).catch(error => console.log(error));
+        } catch(error) {
+            console.log(error);
+            alert(req, 'danger', 'Error!', 'Something went wrong!');
+            res.redirect('back');
+        }
+    },
+
+    deleteImage: async(req, res) => {
+        const {image_id, image_name} = req.body;
+        const imagePath = 'public/images/products/' + image_name;
+
+        try {
+            ProductServices.deleteImage(image_id)
+                .then(data => {
+                    if(data === 1) {
+                        fs.unlink(imagePath, function(err) {
+                            if (err) {
+                                throw err
+                            } else {
+                                alert(req, 'success', '', 'Image Deleted!');
+                            }
+                            res.redirect('back');
+                        })
+                    } else {
+                        alert(req, 'danger', 'Error!', 'Something went wrong!');
+                        res.redirect('back');
+                    }
+                }).catch(error => console.log(error));
+        } catch(error) {
+            console.log(error);
+            alert(req, 'danger', 'Error!', 'Something went wrong!');
+            res.redirect('back');
+        }
     },
 
 
@@ -279,7 +382,7 @@ module.exports = {
 
         if(!errors.isEmpty()) {
             const error = errors.array()[0];
-            alertHelper(req, 'info', 'Something is amiss!', error.msg);
+            alert(req, 'info', 'Something is amiss!', error.msg);
 
             return res.redirect('back');
         }
@@ -292,15 +395,15 @@ module.exports = {
             result
                 .then(data => {
                     if(data === 1) {
-                        alertHelper(req, 'success', 'Success!', 'Attribute created.');
+                        alert(req, 'success', 'Success!', 'Attribute created.');
                         res.redirect('back');
                     } else {
-                        alertHelper(req, 'danger', 'Error!', 'Unable to add.')
+                        alert(req, 'danger', 'Error!', 'Unable to add.')
                         console.log(data);
                     }
                 }).catch(err => console.log(err));
         } catch (error) {
-            alertHelper(req, 'danger', 'Error!', 'Something went Wrong. Contact Admin');
+            alert(req, 'danger', 'Error!', 'Something went Wrong. Contact Admin');
             console.error(error);
         }
     },
@@ -324,7 +427,7 @@ module.exports = {
 
         if(!errors.isEmpty()) {
             const error = errors.array()[0];
-            alertHelper(req, 'info', 'Something is missing!', error.msg);
+            alert(req, 'info', 'Something is missing!', error.msg);
             return res.redirect('back');
         }
 
@@ -336,9 +439,9 @@ module.exports = {
             result
                 .then(data => {
                     if(data === 1) {
-                        alertHelper(req, 'success', 'Success!', 'Category Created.')
+                        alert(req, 'success', 'Success!', 'Category Created.')
                     } else {
-                        alertHelper(req,'danger', 'Error!', 'Unable to add.')
+                        alert(req,'danger', 'Error!', 'Unable to add.')
                     }
                     res.redirect('back');
                 }).catch(err => console.log(err));
@@ -412,9 +515,6 @@ module.exports = {
     }
 }
 
-
-
-//res.redirect('back');
 
 
 // console.log(variation)

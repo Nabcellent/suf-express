@@ -1,9 +1,9 @@
 const getDateHelper = require('./GetDate');
 const validationHelper = require('./Validation');
-const alertHelper = require('./alertMessage');
+const alert = require('./alertMessage');
 
 module.exports = {
     getDateHelper,
     validationHelper,
-    alertHelper
+    alert
 }

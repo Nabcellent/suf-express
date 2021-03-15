@@ -26,13 +26,17 @@ router
  * ***************************************************************/
 router
     .route('/details/all/:id')
-    .get(ProductController.readDetails);
+    .get(ProductController.readProductDetails);
 
 router.post('/details/variation/create/:id', VariationValidation.create(), ProductController.createVariation);
 
 router.put('/details/variation/set-price', ProductController.updateVariationPrice);
 
-router.post('/details/images', ProductController.createImage);
+router
+    .route('/details/images')
+    .post(ProductController.createImage)
+    .put(ProductController.updateImageStatus)
+    .delete(ProductController.deleteImage);
 
 
 

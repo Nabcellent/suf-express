@@ -204,15 +204,14 @@
                                             <td><img src="/images/products/<%= image.image %>" alt="image" class="img-fluid"></td>
                                             <td class="action">
                                                 <% if(image.status === 1) { %>
-                                                    <a href="#" class="mr-4" data-id="<%= image.id %>" title="Update Status">
-                                                        Active
-                                                    </a>
+                                                    <a class="update_image_status mr-4" data-id="<%= image.id %>" title="Update Status"
+                                                       style="cursor: pointer">Active</a>
                                                 <% } else { %>
-                                                        <a href="#" class="mr-3" data-id="<%= image.id %>" title="Update Status">
-                                                            Inactive
-                                                        </a>
+                                                        <a class=" update_image_status mr-3" data-id="<%= image.id %>" title="Update Status"
+                                                           style="cursor: pointer">Inactive</a>
                                                 <% } %>
-                                                <a href="#" class="" title="Remove" data-id="<%= image.id %>">
+                                                <a href="#" class="delete_image" data-id="<%= image.id %>" data-image="<%= image.image %>"
+                                                   data-toggle="modal" data-target="#delete_image_modal" title="Remove">
                                                     <i class="fas fa-trash text-danger"></i>
                                                 </a>
                                             </td>

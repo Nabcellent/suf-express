@@ -149,6 +149,24 @@ module.exports = {
         }
     },
 
+    createImage: async(product_id, image) => {
+        try {
+            const VALUES = {product_id, image, created_at:date, updated_at:date};
+
+            return await new Promise((resolve, reject) => {
+                const qry = `INSERT INTO product_images SET ?`;
+
+                link.query(qry, VALUES, (error, result) => {
+                    if (error)
+                        reject(new Error(error.message));
+                    resolve(result.affectedRows);
+                })
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    },
+
 
     /*********
      * UPDATE
@@ -181,10 +199,25 @@ module.exports = {
     updateVariationPrice: async(id, Price) => {
         try {
             return await new Promise((resolve, reject) => {
-                console.log(id)
                 const qry = `UPDATE variation_options SET extra_price = ? WHERE id = ?`;
 
                 link.query(qry, [Price, id], (error, result) => {
+                    if(error)
+                        reject(new Error(error.message));
+                    resolve(result.changedRows);
+                })
+            })
+        } catch(error) {
+            console.log(error);
+        }
+    },
+
+    updateImageStatus: async(id, status) => {
+        try {
+            return await new Promise((resolve, reject) => {
+                const qry = `UPDATE product_images SET status = ? WHERE id = ?`;
+
+                link.query(qry, [status, id], (error, result) => {
                     if(error)
                         reject(new Error(error.message));
                     resolve(result.changedRows);
@@ -203,6 +236,22 @@ module.exports = {
         try {
             return await new Promise((resolve, reject) => {
                 link.query('DELETE FROM `products` WHERE `id` = ?', [id], (err, result) => {
+                    if(err) {
+                        reject(new Error(err.message));
+                    } else{
+                        resolve(result.affectedRows);
+                    }
+                });
+            });
+        } catch (error) {
+            console.log(error)
+        }
+    },
+
+    deleteImage: async (id) => {
+        try {
+            return await new Promise((resolve, reject) => {
+                link.query('DELETE FROM `product_images` WHERE `id` = ?', [id], (err, result) => {
                     if(err) {
                         reject(new Error(err.message));
                     } else{
