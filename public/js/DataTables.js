@@ -185,6 +185,31 @@ couponDataTable.on( 'order.dt search.dt', function () {
 }).draw();
 
 
+/*_____________________  COUPONS  _____________________*/
+
+const brandDataTable = $('#brands_table').DataTable({
+    scrollY:        '50vh',
+    scrollCollapse: true,
+    paging:         false,
+    order: [[0, 'ASC']],
+    language: {
+        info: 'Number of brands: _MAX_',
+        infoFiltered:   "(filtered _TOTAL_ brands)",
+        search: "_INPUT_",
+        searchPlaceholder: "Search brand"
+    },
+    columnDefs: [
+        { searchable: false, orderable: false, targets: 0 },
+        { searchable: false, orderable: false, targets: 2 }
+    ],
+});
+brandDataTable.on( 'order.dt search.dt', function () {
+    brandDataTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+        cell["innerHTML"] = i+1;
+    } );
+}).draw();
+
+
 /*_____________________  PAYMENTS  _____________________*/
 
 const paymentDataTable = $('#payments_table').DataTable({

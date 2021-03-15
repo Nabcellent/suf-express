@@ -78,7 +78,31 @@ $(() => {
             url: '/products/details/images',
             success: (response) => {
                 if(response.errors) {
-                    alert(response.errors[0].message);
+                    alert(response.errors.message);
+                } else {
+                    if(response.status === 0) {
+                        $(this).html('Inactive');
+                    } else{
+                        $(this).html('Active');
+                    }
+                }
+            }, error: () => {
+                alert("error");
+            }
+        });
+    })
+
+    $('.update_brand_status').on('click', function() {
+        $.ajax({
+            data: {
+                status: $(this).text(),
+                brand_id: $(this).attr('data-id')
+            },
+            method: 'PUT',
+            url: '/products/addons/status',
+            success: (response) => {
+                if(response.errors) {
+                    alert(response.errors.message);
                 } else {
                     if(response.status === 0) {
                         $(this).html('Inactive');

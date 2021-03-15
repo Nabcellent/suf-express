@@ -1,4 +1,4 @@
-const link = require("../../Config/database");
+const link = require("../../../Config/database");
 const date = new Date();
 
 module.exports = {

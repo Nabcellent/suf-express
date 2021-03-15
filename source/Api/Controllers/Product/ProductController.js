@@ -1,8 +1,8 @@
-const ProductServices = require('../Services/ProductService');
+const ProductServices = require('../../Services/Product/ProductService');
 const moment = require('moment');
-const {dbRead} = require("../../Database/query");
+const {dbRead} = require("../../../Database/query");
 const {validationResult} = require("express-validator");
-const {alert, validationHelper} = require('../Helpers');
+const {alert, validationHelper} = require('../../Helpers');
 const fs = require("fs")
 
 
@@ -434,9 +434,7 @@ module.exports = {
         const {title, categories} = req.body;
 
         try {
-            let result = ProductServices.createCategory(title, categories)
-
-            result
+            ProductServices.createCategory(title, categories)
                 .then(data => {
                     if(data === 1) {
                         alert(req, 'success', 'Success!', 'Category Created.')
@@ -476,39 +474,6 @@ module.exports = {
             const data = await getCategories();
 
             res.render('products/categories', {Title: 'Categories', layout: './layouts/nav', categoryInfo: data});
-        } catch(error) {
-            console.log(error);
-        }
-    },
-
-
-
-    readAddons: async (req, res) => {
-        const getAddOnData = async () => {
-            const data = {
-                categories: [],
-                subCategories: [],
-                coupons: [],
-                manufacturers: [],
-                moment: moment
-            };
-
-            (await dbRead.getReadInstance().getFromDb({
-                table: 'coupons',
-                columns: 'coup_title',
-                join: [['products', 'coupons.pro_id = products.id']]
-            })).forEach((row) => {data.coupons.push(row)});
-            (await dbRead.getReadInstance().getFromDb({
-                table: 'sellers',
-            })).forEach((row) => {data.manufacturers.push(row)});
-
-            return data;
-        }
-
-        try {
-            const data = await getAddOnData();
-
-            res.render('products/pro_addons', {Title: 'Add-Ons', layout: './layouts/nav', addonInfo: data});
         } catch(error) {
             console.log(error);
         }

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const {ProductController, JQueryController} = require("../Controllers");
-const {ProductValidation, VariationValidation} = require("../Validations");
+const {ProductController, AddonController, JQueryController} = require("../Controllers");
+const {ProductValidation, VariationValidation, BrandValidation} = require("../Validations");
 
 router
     .route('/')
@@ -52,7 +52,15 @@ router
 
 router
     .route('/addons')
-    .get(ProductController.readAddons);
+    .get(AddonController.readAddons)
+
+router
+    .route('/addons/brand')
+    .post(BrandValidation.create(), AddonController.createUpdateBrand)
+    .put(BrandValidation.update(), AddonController.createUpdateBrand)
+    .delete(AddonController.deleteBrand);
+
+router.put('/addons/status', AddonController.updateBrandStatus)
 
 
 /**
