@@ -6,8 +6,9 @@ const {alert, validationHelper} = require('../../Helpers');
 const fs = require("fs")
 
 
-module.exports = {
-    createProduct: async(req, res) => {
+/**-----------------------------------------------()     FUNCTIONS    ()-----------------------------------------------*/
+
+const createProduct = async(req, res) => {
         const errors = validationResult(req);
 
         if(!errors.isEmpty()) {
@@ -31,11 +32,11 @@ module.exports = {
         })
 
         const {
-            title, seller, category, label, base_price, keywords, description
+            title, seller, brand_id, category, label, base_price, sale_price, discount, keywords, description,
         } = req.body;
 
         try {
-            await ProductServices.createProduct(title, seller, category, label, base_price, name, keywords, description)
+            await ProductServices.createProduct(title, seller, brand_id, category, label, base_price, sale_price, discount, name, keywords, description)
                 .then(data => {
                     if(data === 1) {
                         alert(req, 'success', 'Success!', 'Product Created');
@@ -52,69 +53,74 @@ module.exports = {
                 layout: './layouts/nav',
             });
         }
-    },
-
-    readProducts: async(req, res) => {
-        const getProductData = async () => {
-            const result = {
-                products: [],
-                moment: moment
-            };
-
-            for (const row of (await dbRead.getReadInstance().getFromDb({
+    }
+const readProducts = async(req, res) => {
+    const getProductData = async () => {
+        return {
+            products: await dbRead.getReadInstance().getFromDb({
                 table: 'products',
-                columns: 'products.id, title, main_image, seller_id, base_price, sale_price, label, users.first_name, users.last_name',
+                columns: 'products.id, title, main_image, seller_id, base_price, sale_price, label, ' +
+                    'products.status, users.first_name, users.last_name',
                 join: [['users', 'products.seller_id = users.id']],
                 orderBy: ['products.created_at DESC']
-            }))) {
-                row.qry_sold = (await dbRead.getReadInstance().getFromDb({
-                    table: 'orders',
-                    where: [
-                        ['orders.pro_id', '=', row.id],
-                        ['order_status', '=', 'complete']
-                    ]
-                })).length;
+            }),
+            moment: moment
+        };
+    }
 
-                result.products.push(row);
-            }
+    try {
+        const data = await getProductData();
 
-            return result;
-        }
+        res.render('products/products', {Title: 'Products', layout: './layouts/nav', productsInfo: data});
+    } catch(error) {
+        console.log(error);
+    }
+}
+const updateProduct = async(req, res) => {
+    if(!await validationHelper.validate(req, res)) {
+        const {
+            title, label, seller, category, keywords, base_price, sale_price, brand_id, description, product_id
+        } = req.body;
 
         try {
-            const data = await getProductData();
-
-            res.render('products/products', {Title: 'Products', layout: './layouts/nav', productsInfo: data});
+            ProductServices.updateProduct(product_id, category, seller, title, keywords, description, label, base_price, sale_price, brand_id)
+                .then((data) => {
+                    if(data === 1) {
+                        alert(req, 'success', '', 'Product Updated!');
+                    } else {
+                        alert(req, 'danger', 'Error!', 'Something went wrong!');
+                    }
+                    res.redirect('back');
+                }).catch(error => console.log(error));
         } catch(error) {
             console.log(error);
+            alert(req, 'danger', 'Error!', 'Something went wrong!');
+            res.redirect('back');
         }
-    },
+    }
+}
+const updateProductStatus = async(req, res) => {
+    const {status, product_id} = req.body;
+    let newStatus = (status === 'Active') ? 0 : 1;
 
-    updateProduct: async(req, res) => {
-        if(!await validationHelper.validate(req, res)) {
-            const {
-                title, label, seller, category, keywords, base_price, sale_price, description, product_id
-            } = req.body;
-
-            try {
-                ProductServices.updateProduct(product_id, category, seller, title, keywords, description, label, base_price, sale_price)
-                    .then((data) => {
-                        if(data === 1) {
-                            alert(req, 'success', '', 'Product Updated!');
-                        } else {
-                            alert(req, 'danger', 'Error!', 'Something went wrong!');
-                        }
-                        res.redirect('back');
-                    }).catch(error => console.log(error));
-            } catch(error) {
-                console.log(error);
-                alert(req, 'danger', 'Error!', 'Something went wrong!');
-                res.redirect('back');
-            }
-        }
-    },
-
-    deleteProduct: async(req, res) => {
+    try {
+        ProductServices.updateProductStatus(product_id, newStatus)
+            .then((data) => {
+                if(data === 1) {
+                    alert(req, 'success', '', 'Status Updated!');
+                    return res.json({status: newStatus});
+                } else {
+                    alert(req, 'danger', 'Error!', 'Something went wrong!');
+                    return res.json({errors: {message: 'Internal error. Contact Admin'}});
+                }
+            }).catch(error => console.log(error));
+    } catch(error) {
+        console.log(error);
+        alert(req, 'danger', 'Error!', 'Something went wrong!');
+        res.redirect('back');
+    }
+}
+const deleteProduct = async(req, res) => {
         const {product_id, image_name} = req.body;
         const imagePath = 'public/images/products/' + image_name;
 
@@ -141,37 +147,43 @@ module.exports = {
             alert(req, 'danger', 'Error!', 'Something went wrong!');
             res.redirect('back');
         }
-    },
-
-    readProductCreate: async(req, res) => {
-        const data = async () => {
-            return {
-                categories: await dbRead.getReadInstance().getFromDb({
-                    table: 'categories',
-                    where: [['category_id', 'IS', 'NULL']]
-                }),
-                subCategories: await dbRead.getReadInstance().getFromDb({
-                    table: 'categories',
-                    where: [['category_id', 'IS NOT', 'NULL']],
-                }),
-                sellers: await dbRead.getReadInstance().getFromDb({
-                    table: 'users',
-                    columns: 'sellers.user_id, first_name, last_name',
-                    join: [['sellers', 'users.id = sellers.user_id']]
-                })
-            }
+    }
+const readProductCreate = async(req, res) => {
+    const data = async () => {
+        return {
+            categories: await dbRead.getReadInstance().getFromDb({
+                table: 'categories',
+                where: [['category_id', 'IS', 'NULL']]
+            }),
+            subCategories: await dbRead.getReadInstance().getFromDb({
+                table: 'categories',
+                where: [
+                    ['category_id', 'IS NOT', 'NULL'],
+                    ['status', '=', 1]
+                ]
+            }),
+            sellers: await dbRead.getReadInstance().getFromDb({
+                table: 'users',
+                columns: 'sellers.user_id, first_name, last_name',
+                join: [['sellers', 'users.id = sellers.user_id']]
+            }),
+            brands: await dbRead.getReadInstance().getFromDb({
+                table: 'brands',
+                columns: 'id, name',
+                where: [['status', '=', 1]]
+            })
         }
+    }
 
-        const result = await (await data());
+    const result = await (await data());
 
-        try {
-            res.json(result);
-        } catch (error) {
-            console.log(error);
-        }
-    },
-
-    readProductDetails: async(req, res) => {
+    try {
+        res.json(result);
+    } catch (error) {
+        console.log(error);
+    }
+}
+const readProductDetails = async(req, res) => {
         const {id} = req.params;
         const productId = parseInt(id, 10);
         const results = {
@@ -179,10 +191,12 @@ module.exports = {
                 table: 'products',
                 columns: 'products.id, products.title as product_title, main_image, keywords, ' +
                     'label, base_price, sale_price, products.created_at, products.updated_at, description, ' +
-                    'categories.id as category_id, categories.title as category_title, users.id as user_id, first_name, last_name',
+                    'categories.id AS category_id, categories.title AS category_title, users.id as user_id, first_name, last_name, ' +
+                    'brands.id AS brand_id, brands.name AS brand',
                 join: [
                     ['categories', 'products.category_id = categories.id'],
-                    ['users', 'products.seller_id = users.id']
+                    ['users', 'products.seller_id = users.id'],
+                    ['brands', 'products.brand_id = brands.id']
                 ],
                 where: [['products.id', '=', productId]],
                 limit: 1
@@ -213,7 +227,55 @@ module.exports = {
             Title: 'some product',      layout: './layouts/nav',
             details: results,           moment: moment,
         });
-    },
+    }
+
+const updateCategory = async(req, res) => {
+    const {category_id, title} = req.body;
+
+    try {
+        ProductServices.updateCategory(category_id, title)
+            .then(data => {
+                if(data === 1) {
+                    alert(req, 'success','Success', 'Category updated');
+                } else {
+                    alert(req, 'danger', 'Error!', 'Something went wrong!');
+                }
+                res.redirect('back');
+            });
+    } catch(error) {
+        console.log(error);
+    }
+};
+const updateCategoryStatus = async(req, res) => {
+    const {status, sub_category_id} = req.body;
+    let newStatus = (status === 'Active') ? 0 : 1;
+
+    try {
+        ProductServices.updateCategoryStatus(sub_category_id, newStatus)
+            .then((data) => {
+                if(data === 1) {
+                    alert(req, 'success', '', 'Status Updated!');
+                    return res.json({status: newStatus});
+                } else {
+                    alert(req, 'danger', 'Error!', 'Something went wrong!');
+                    return res.json({errors: {message: 'Internal error. Contact Admin'}});
+                }
+            }).catch(error => console.log(error));
+    } catch(error) {
+        console.log(error);
+        alert(req, 'danger', 'Error!', 'Something went wrong!');
+        res.redirect('back');
+    }
+}
+
+module.exports = {
+    createProduct,
+    readProducts,
+    updateProduct,
+    updateProductStatus,
+    deleteProduct,
+    readProductCreate,
+    readProductDetails,
 
 
 
@@ -296,7 +358,7 @@ module.exports = {
                         if(error) {
                             return res.send(error);
                         }
-                    })
+                    });
 
                     ProductServices.createImage(product_id, name)
                         .then(data => {
@@ -461,10 +523,11 @@ module.exports = {
                 where: [['category_id', 'IS', 'NULL']]
             })).forEach((row) => {data.categories.push(row)});
             (await dbRead.getReadInstance().getFromDb({
-                table: 'categories',
-                columns: 'title',
-                where: [['category_id', 'IS NOT', 'NULL']],
-                groupBy: ['title'],
+                table: 'categories AS subCat',
+                columns: 'subCat.id AS id, subCat.title, subCat.status, subCat.updated_at, cat.title AS catTitle',
+                join: [['categories AS cat', 'subCat.category_id = cat.id']],
+                where: [['subCat.category_id', 'IS NOT', 'NULL']],
+                orderBy: ['updated_at DESC']
             })).forEach((row) => {data.subCategories.push(row)});
 
             return data;
@@ -477,7 +540,29 @@ module.exports = {
         } catch(error) {
             console.log(error);
         }
-    }
+    },
+
+    updateCategory,
+    updateCategoryStatus,
+
+    deleteCategory: async(req, res) => {
+        const {sub_category_id} = req.body;
+
+        try {
+            ProductServices.deleteSubCategory(sub_category_id)
+                .then(data => {
+                    if(data === 1) {
+                        alert(req, "info", '', 'Sub-Category deleted.');
+                    } else {
+                        alert(req, 'danger', 'Error!', 'Something went wrong!');
+                    }
+                    res.redirect('back');
+                });
+        } catch(error) {
+            console.log(error);
+            alert(req, "info", '', 'Sub-Category deleted.');
+        }
+    },
 }
 
 

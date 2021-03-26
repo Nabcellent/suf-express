@@ -4,9 +4,11 @@ const generalRoute = require('./GeneralRoute');
 const productsRoute = require('./ProductsRoute');
 const ordersRoute = require('./OrdersRoute');
 const usersRoute = require('./UsersRoute');
+const adminRoute = require('./AdminRoute');
 const authRoute = require('./AuthRoute');
 
 router.use('/user', /*checkAuth,*/ usersRoute);
+router.use('/admin', /*checkAuth,*/ adminRoute);
 router.use('/auth', /*checkAuth,*/ authRoute);
 router.use('/products', /*checkAuth,*/ productsRoute);
 router.use('/orders', /*checkAuth,*/ ordersRoute);

@@ -25,9 +25,16 @@
                         </div>
                         <div class="card-body crud_form">
                             <form action="/products" method="POST" enctype="multipart/form-data">
-                                <div class="form-group">
-                                    <input type="text" name="title" class="form-control mt-2 crud_form"
-                                           placeholder="Enter product title *" aria-label required>
+                                <div class="form-row">
+                                    <div class="form-group col">
+                                        <input type="text" name="title" class="form-control mt-2 crud_form"
+                                               placeholder="Enter product title *" aria-label required>
+                                    </div>
+                                    <div class="form-group col">
+                                        <select id="select_brand" name="brand_id" class="mt-2 form-control crud_form" aria-label required>
+                                            <option selected hidden value="">Select a brand*</option>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col">
@@ -55,9 +62,21 @@
                                             <label class="custom-control-label crud_form" for="sale">Sale product</label>
                                         </div>
                                     </div>
-                                    <div id="sale_price_div" class="form-group col-9">
-                                        <label></label>
-                                        <input type="number" name="base_price" class="form-control crud_form" placeholder="Base price *" aria-label required>
+                                    <div class="col-9">
+                                        <div class="form-row">
+                                            <div class="form-group col">
+                                                <label></label>
+                                                <input type="number" name="base_price" class="form-control crud_form" placeholder="Base price *" aria-label required>
+                                            </div>
+                                            <div id="sale_price_div" class="form-group col">
+                                                <label></label>
+                                                <input type="number" name="sale_price" class="form-control crud_form" placeholder="Sale price" aria-label>
+                                            </div>
+                                            <div class="form-group col">
+                                                <label></label>
+                                                <input type="number" name="discount" class="form-control crud_form" placeholder="Discount %" aria-label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-row">

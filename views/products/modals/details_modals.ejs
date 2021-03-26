@@ -105,10 +105,19 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="mb-0">Keywords</label>
-                        <input type="text" name="keywords" class="form-control crud_form" value="<%= details.product[0].keywords %>"
-                               placeholder="Keywords" aria-label>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="mb-0">Brand</label>
+                            <select id="select_brand" name="brand_id" class="mt-2 form-control crud_form" aria-label required>
+                                <option selected hidden value="<%= details.product[0].brand_id %>">
+                                    <%= details.product[0].brand %></option>
+                            </select>
+                        </div>
+                        <div class="form-group col">
+                            <label class="mb-0">Keywords</label>
+                            <input type="text" name="keywords" class="form-control crud_form" value="<%= details.product[0].keywords %>"
+                                   placeholder="Keywords" aria-label>
+                        </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col">

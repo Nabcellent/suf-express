@@ -2,73 +2,94 @@
 
 <div id="categories" class="container-fluid">
     <div class="row">
-        <div class="col-4">
-            <div class="card crud_table shadow mb-4">
-                <div class="card-header d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-info"><i class="fab fa-opencart"></i> SU-F Categories</h6>
-                    <button class="btn btn-outline-info" data-toggle="modal" data-target="#add_category">Add Category</button>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-borderless table-hover crud_table" id="categories_table">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Title</th>
-                                <th scope="col">Action</th>
-                            </tr>
-                            </thead>
-                            <tbody>
+        <div class="col-8">
+            <div class="row">
+                <div class="col">
+                    <div class="card crud_table shadow mb-4">
+                        <div class="card-header d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-info"><i class="fab fa-opencart"></i> SU-F Categories</h6>
+                            <button class="btn btn-info" data-toggle="modal" data-target="#add_category">Add Category</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-borderless table-hover crud_table" id="categories_table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Title</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
 
-                            <% categoryInfo.categories.forEach((row, i) => { %>
-                                <tr>
-                                    <td><%= i + 1 %></td>
-                                    <td><%= row.title %></td>
-                                    <td class="action">
-                                        <a href="#" class="ml-4" title="Modify"><i class="fas fa-pen text-dark"></i></a>
-                                        <a href="#" class="ml-3" title="Remove"><i class="fas fa-trash text-danger"></i></a>
-                                    </td>
-                                </tr>
-                            <% }) %>
+                                    <% categoryInfo.categories.forEach((row, i) => { %>
+                                        <tr>
+                                            <td><%= i + 1 %></td>
+                                            <td><%= row.title %></td>
+                                            <td class="action">
+                                                <a href="#" class="ml-4" title="Modify"><i class="fas fa-pen text-dark"></i></a>
+                                                <a href="#" class="ml-3" title="Remove"><i class="fas fa-trash text-danger"></i></a>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
 
-                            </tbody>
-                        </table>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-4">
-            <div class="card crud_table shadow mb-4">
-                <div class="card-header d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-info"><i class="fab fa-opencart"></i> SU-F Sub-Categories</h6>
-                    <button class="btn btn-outline-info" data-toggle="modal" data-target="#add_sub_category">Add Sub-Category</button>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-borderless table-hover crud_table" id="sub_cat_table">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Title</th>
-                                <th scope="col">Action</th>
-                            </tr>
-                            </thead>
-                            <tbody>
+            <div class="row">
+                <div class="col">
+                    <div class="card crud_table shadow mb-4">
+                        <div class="card-header d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-info"><i class="fab fa-opencart"></i> SU-F Sub-Categories</h6>
+                            <button id="add_sub_category" class="btn btn-info" data-toggle="modal" data-target="#sub_category_modal">Add Sub-Category</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-borderless table-hover crud_table" id="sub_cat_table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Category</th>
+                                        <th scope="col">Sub Category</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
 
-                            <% categoryInfo.subCategories.forEach((row) => { %>
-                                <tr>
-                                    <td></td>
-                                    <td><%= row.title %></td>
-                                    <td class="action">
-                                        <a href="#" class="ml-4" title="Modify"><i class="fas fa-pen text-dark"></i></a>
-                                        <a href="#" class="ml-3" title="Remove"><i class="fas fa-trash text-danger"></i></a>
-                                    </td>
-                                </tr>
-                            <% }) %>
+                                    <% categoryInfo.subCategories.forEach((row) => { %>
+                                        <tr>
+                                            <td></td>
+                                            <td><%= row.catTitle %></td>
+                                            <td><%= row.title %></td>
+                                            <td class="action">
+                                                <% if(row.status === 1) { %>
+                                                    <a class="update_sub_category_status" data-id="<%= row.id %>" title="Update Status"
+                                                       style="cursor: pointer"><i class="fas fa-toggle-on" status="Active"></i></a>
+                                                <% } else { %>
+                                                    <a class="update_sub_category_status" data-id="<%= row.id %>" title="Update Status"
+                                                       style="cursor: pointer"><i class="fas fa-toggle-off" status="Inactive"></i></a>
+                                                <% } %>
+                                                <a href="#" class="ml-3 update_sub_category" title="Modify" data-toggle="modal" data-target="#sub_category_modal"
+                                                   data-id="<%= row.id %>" data-title="<%= row.title %>">
+                                                    <i class="fas fa-pen text-dark"></i>
+                                                </a>
+                                                <a href="#" class="ml-3 delete_sub_category" data-id="<%= row.id %>"
+                                                   data-toggle="modal" data-target="#delete_sub_category" title="Remove">
+                                                    <i class="fas fa-trash text-danger"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
 
-                            </tbody>
-                        </table>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

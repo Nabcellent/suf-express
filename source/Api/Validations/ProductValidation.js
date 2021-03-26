@@ -6,7 +6,9 @@ module.exports = {
             check("title", "Title is required")
                 .not().isEmpty(),
             check("seller", "Seller is required")
-                .not().isEmpty()
+                .not().isEmpty(),
+            check('brand_id')
+                .not().isEmpty().withMessage("Brand is required"),
         ]
     },
 
@@ -14,8 +16,6 @@ module.exports = {
         return [
             check("title", "Title is required")
                 .not().isEmpty(),
-            check("seller", "Seller is required")
-                .not().isEmpty()
         ]
     }
 }

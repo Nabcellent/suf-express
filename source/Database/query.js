@@ -156,7 +156,7 @@ const selectQryBuilder = (params) => {
     if(typeof params.where !== 'undefined' && params.where !== null) {
         if(params.where.length > 1) {
             params.where.forEach(where => {
-                qry = qry.where(`${where[0]} ${where[1]} '${where[2]}'`)
+                qry = qry.where(`${where[0]} ${where[1]} ${where[2]}`)
             });
         } else {
             if(params.where[0][2] === 'NULL') {

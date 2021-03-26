@@ -29,6 +29,10 @@
                                                 <td class="py-0"><%= details.product[0].last_name %></td>
                                             </tr>
                                             <tr>
+                                                <th class="py-0" scope="row">Brand</th>
+                                                <td class="py-0" colspan="2"><%= details.product[0].brand %></td>
+                                            </tr>
+                                            <tr>
                                                 <th class="py-0" scope="row">Keywords</th>
                                                 <td class="py-0" colspan="2"><%= details.product[0].keywords %></td>
                                             </tr>
@@ -107,7 +111,7 @@
                                             <table class="table table-sm">
                                                 <thead>
                                                 <tr class="row">
-                                                    <th class="col-5"><%= attribute %></th>
+                                                    <th class="col-4"><%= attribute %></th>
                                                     <th class="col-6">Extra Cost</th>
                                                 </tr>
                                                 </thead>
@@ -117,8 +121,8 @@
                                                             let varOptAttribute = Object.keys(JSON.parse(varOpt.variation))[0];
                                                             if(varOptAttribute === attribute) { %>
                                                         <tr class="row">
-                                                            <td class="col-5"><%= varOpt.variant %></td>
-                                                            <td class="col-6">
+                                                            <td class="col-4"><%= varOpt.variant %></td>
+                                                            <td class="col-7">
                                                                 <div class="row">
                                                                     <div class="col"><%= parseFloat(varOpt.extra_price).toFixed(2) %>/-</div>
                                                                     <div class="col">
@@ -205,10 +209,10 @@
                                             <td class="action">
                                                 <% if(image.status === 1) { %>
                                                     <a class="update_image_status mr-4" data-id="<%= image.id %>" title="Update Status"
-                                                       style="cursor: pointer">Active</a>
+                                                       style="cursor: pointer"><i class="fas fa-toggle-on" status="Active"></i></a>
                                                 <% } else { %>
                                                         <a class=" update_image_status mr-3" data-id="<%= image.id %>" title="Update Status"
-                                                           style="cursor: pointer">Inactive</a>
+                                                           style="cursor: pointer"><i class="fas fa-toggle-off" status="Inactive"></i></a>
                                                 <% } %>
                                                 <a href="#" class="delete_image" data-id="<%= image.id %>" data-image="<%= image.image %>"
                                                    data-toggle="modal" data-target="#delete_image_modal" title="Remove">

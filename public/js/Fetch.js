@@ -21,6 +21,12 @@ $(() => {
                 sellerOptions += `<option value="${seller.user_id}">${seller.last_name} ${seller.first_name}</option>`;
             })
 
+            let brandOptions = '';
+            data.brands.forEach(brand => {
+                brandOptions += `<option value="${brand.id}">${brand.name}</option>`;
+            })
+
+            $('#select_brand').append(brandOptions);
             $('#categories_s2').append(categoryOptions);
             $('#sellers_s2').append(sellerOptions);
         })

@@ -133,10 +133,9 @@ orderDataTable.on( 'order.dt search.dt', function () {
 /*_____________________  SUB_CATEGORIES  _____________________*/
 
 const subCatDataTable = $('#sub_cat_table').DataTable({
-    scrollY:        '20vh',
+    scrollY:        '30vh',
     scrollCollapse: true,
     paging:         false,
-    order: [[1, 'ASC']],
     language: {
         info: 'Total Sub-Categories: _MAX_',
         infoFiltered:   "(filtered _TOTAL_)",
@@ -150,7 +149,7 @@ const subCatDataTable = $('#sub_cat_table').DataTable({
     }, {
         searchable: false,
         orderable: false,
-        targets: 2
+        targets: 3
     }],
 });
 subCatDataTable.on( 'order.dt search.dt', function () {

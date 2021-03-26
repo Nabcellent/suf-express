@@ -10,6 +10,8 @@ router
     .put(ProductValidation.update(), ProductController.updateProduct)
     .delete(ProductController.deleteProduct);
 
+router.put('/status', ProductController.updateProductStatus)
+
 router
     .route('/create')
     .get((req, res) => {
@@ -43,7 +45,11 @@ router
 router
     .route('/categories')
     .get(ProductController.readCategories)
-    .post(ProductController.createCategory);
+    .post(ProductController.createCategory)
+    .put(ProductValidation.update(), ProductController.updateCategory)
+    .delete(ProductController.deleteCategory);
+
+router.put('/categories/status', ProductController.updateCategoryStatus)
 
 router
     .route('/attributes')

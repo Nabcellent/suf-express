@@ -13,7 +13,4 @@ router.route('/customer')
     .get(UserController.readCustomer);
 
 
-
-
-
 module.exports = router;

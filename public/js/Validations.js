@@ -68,10 +68,34 @@ $(() => {
 
 
 
+    $('.update_product_status').on('click', function() {
+        $.ajax({
+            data: {
+                status: $(this).children('i').attr('status'),
+                product_id: $(this).attr('data-id')
+            },
+            method: 'PUT',
+            url: '/products/status',
+            success: (response) => {
+                if(response.errors) {
+                    alert(response.errors.message);
+                } else {
+                    if(response.status === 0) {
+                        $(this).html('<i class="fas fa-toggle-off" status="Inactive"></i>');
+                    } else{
+                        $(this).html('<i class="fas fa-toggle-on" status="Active"></i>');
+                    }
+                }
+            }, error: () => {
+                alert("error");
+            }
+        });
+    });
+
     $('.update_image_status').on('click', function() {
         $.ajax({
             data: {
-                status: $(this).text(),
+                status: $(this).children('i').attr('status'),
                 image_id: $(this).attr('data-id')
             },
             method: 'PUT',
@@ -81,21 +105,21 @@ $(() => {
                     alert(response.errors.message);
                 } else {
                     if(response.status === 0) {
-                        $(this).html('Inactive');
+                        $(this).html('<i class="fas fa-toggle-off" status="Inactive"></i>');
                     } else{
-                        $(this).html('Active');
+                        $(this).html('<i class="fas fa-toggle-on" status="Active"></i>');
                     }
                 }
             }, error: () => {
                 alert("error");
             }
         });
-    })
+    });
 
     $('.update_brand_status').on('click', function() {
         $.ajax({
             data: {
-                status: $(this).text(),
+                status: $(this).children('i').attr('status'),
                 brand_id: $(this).attr('data-id')
             },
             method: 'PUT',
@@ -105,9 +129,33 @@ $(() => {
                     alert(response.errors.message);
                 } else {
                     if(response.status === 0) {
-                        $(this).html('Inactive');
+                        $(this).html('<i class="fas fa-toggle-off" status="Inactive"></i>');
                     } else{
-                        $(this).html('Active');
+                        $(this).html('<i class="fas fa-toggle-on" status="Active"></i>');
+                    }
+                }
+            }, error: () => {
+                alert("error");
+            }
+        });
+    });
+
+    $('.update_sub_category_status').on('click', function() {
+        $.ajax({
+            data: {
+                status: $(this).children('i').attr('status'),
+                sub_category_id: $(this).attr('data-id')
+            },
+            method: 'PUT',
+            url: '/products/categories/status',
+            success: (response) => {
+                if(response.errors) {
+                    alert(response.errors.message);
+                } else {
+                    if(response.status === 0) {
+                        $(this).html('<i class="fas fa-toggle-off" status="Inactive"></i>');
+                    } else{
+                        $(this).html('<i class="fas fa-toggle-on" status="Active"></i>');
                     }
                 }
             }, error: () => {

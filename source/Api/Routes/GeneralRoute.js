@@ -39,16 +39,6 @@ router.get('/dashboard', /*checkAuth,*/ async (req, res) => {
             where: [['user_type', '=', 'customer']]
         })).forEach((row) => {data.customers.push(row)});
         (await dbRead.getReadInstance().getFromDb({table: 'categories'})).forEach((row) => {data.productCats.push(row)});
-        (await dbRead.getReadInstance().getFromDb({
-            table: 'orders',
-            columns: 'order_amount, order_invoice_no, order_quantity, order_status, users.email, products.id',
-            join: [
-                ['users', 'orders.id = users.id'],
-                ['products', 'orders.id = products.id']
-            ],
-            limit: 7,
-            orderBy: ['order_date DESC']
-        })).forEach((row) => {data.orders.push(row)});
 
         return data;
     }

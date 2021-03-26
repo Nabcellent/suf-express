@@ -6,7 +6,7 @@
             <div class="card crud_table shadow mb-4">
                 <div class="card-header d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold text-info"><i class="fab fa-opencart"></i> SU-F Products</h6>
-                    <a href="/products/create" class="btn btn-outline-info">Add Product</a>
+                    <a href="/products/create" class="btn btn-info">Add Product</a>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -16,12 +16,13 @@
                                 <th>#</th>
                                 <th>Image</th>
                                 <th>Title</th>
-                                <th>Manufacturer</th>
+                                <th>Seller</th>
                                 <th>Date</th>
                                 <th>Price</th>
                                 <th>Sale Price</th>
                                 <th>Label</th>
                                 <th>Qty sold</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -39,8 +40,17 @@
                                     <td class="text-center"><%= row.sale_price %></td>
                                     <td><%= row.label %></td>
                                     <td class="text-center"><%= row.qry_sold %></td>
+                                    <td class="text-center" style="font-size: 14pt">
+                                        <% if(row.status === 1) { %>
+                                            <a class="update_product_status" data-id="<%= row.id %>" title="Update Status"
+                                               style="cursor: pointer"><i class="fas fa-toggle-on" status="Active"></i></a>
+                                        <% } else { %>
+                                            <a class="update_product_status" data-id="<%= row.id %>" title="Update Status"
+                                               style="cursor: pointer"><i class="fas fa-toggle-off" status="Inactive"></i></a>
+                                        <% } %>
+                                    </td>
                                     <td class="action">
-                                        <a href="/products/details/all/<%= row.id %>" class="ml-3" title="view">
+                                        <a href="/products/details/all/<%= row.id %>" class="ml-2" title="view">
                                             <i class="fas fa-eye text-info"></i>
                                         </a>
                                         <a href="#" class="ml-2 delete_product" data-toggle="modal" data-id="<%= row.id %>"

@@ -1,6 +1,22 @@
 const link = require("../../../Config/database");
 const date = new Date();
 
+const updateProductStatus = async(id, status) => {
+    try {
+        return await new Promise((resolve, reject) => {
+            const qry = `UPDATE products SET status = ? WHERE id = ?`;
+
+            link.query(qry, [status, id], (error, result) => {
+                if(error)
+                    reject(new Error(error.message));
+                resolve(result.changedRows);
+            })
+        })
+    } catch(error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     /*********
      * CREATE
@@ -48,14 +64,15 @@ module.exports = {
         return name;
     },
 
-    createProduct: async(title, seller, category, label, base_price, main_image, keywords, description) => {
+    createProduct: async(title, seller_id, brand_id, category_id, label, base_price, sale_price, discount, main_image, keywords, description) => {
         try {
             const values = {
-                category_id:category,  seller_id:seller,
-                title:title,           main_image:main_image,
-                keywords:keywords,     description:description,
-                label:label,           base_price:base_price,
-                created_at:date,       updated_at:date
+                category_id,        seller_id,
+                brand_id,           title,           main_image,
+                sale_price,         discount,
+                keywords,           description,
+                label,              base_price,
+                created_at:date,    updated_at:date
             }
 
             return await new Promise((resolve, reject) => {
@@ -157,9 +174,11 @@ module.exports = {
                 const qry = `INSERT INTO product_images SET ?`;
 
                 link.query(qry, VALUES, (error, result) => {
-                    if (error)
+                    if (error) {
                         reject(new Error(error.message));
-                    resolve(result.affectedRows);
+                    } else {
+                        resolve(result.affectedRows);
+                    }
                 })
             })
         } catch (error) {
@@ -171,18 +190,18 @@ module.exports = {
     /*********
      * UPDATE
      * ********/
-    updateProduct: async(id, category_id, seller_id, title, keywords, description, label, base_price, sale_price) => {
+    updateProduct: async(id, category_id, seller_id, title, keywords, description, label, base_price, sale_price, brand_id) => {
         try {
             const VALUES = [
                 category_id,    seller_id,      title,
                 keywords,       description,    label,
-                base_price,     sale_price,     date,
-                id
+                base_price,     sale_price,     brand_id,
+                date,           id
             ]
 
             return await new Promise((resolve, reject) => {
                 const qry = `UPDATE products SET category_id = ?, seller_id = ?, title = ?, 
-                    keywords = ?, description = ?, label = ?, base_price = ?, sale_price = ?, updated_at = ?
+                    keywords = ?, description = ?, label = ?, base_price = ?, sale_price = ?, brand_id = ?, updated_at = ?
                     WHERE id = ?`;
 
                 link.query(qry, VALUES, (err, result) => {
@@ -195,6 +214,8 @@ module.exports = {
             console.log(error);
         }
     },
+
+    updateProductStatus,
 
     updateVariationPrice: async(id, Price) => {
         try {
@@ -216,6 +237,38 @@ module.exports = {
         try {
             return await new Promise((resolve, reject) => {
                 const qry = `UPDATE product_images SET status = ? WHERE id = ?`;
+
+                link.query(qry, [status, id], (error, result) => {
+                    if(error)
+                        reject(new Error(error.message));
+                    resolve(result.changedRows);
+                })
+            })
+        } catch(error) {
+            console.log(error);
+        }
+    },
+
+    updateCategory: async(id, title) => {
+        try {
+            return await new Promise((resolve, reject) => {
+                link.query("UPDATE categories SET title = ? WHERE id = ?", [title, id], (err, results) => {
+                    if(err) {
+                        reject(new Error(err.message));
+                    } else {
+                        resolve(results.changedRows);
+                    }
+                });
+            })
+        } catch(error) {
+            console.log(error);
+        }
+    },
+
+    updateCategoryStatus: async(id, status) => {
+        try {
+            return await new Promise((resolve, reject) => {
+                const qry = `UPDATE categories SET status = ? WHERE id = ?`;
 
                 link.query(qry, [status, id], (error, result) => {
                     if(error)
@@ -261,6 +314,22 @@ module.exports = {
             });
         } catch (error) {
             console.log(error)
+        }
+    },
+
+    deleteSubCategory: async(id) => {
+        try {
+            return await new Promise((resolve, reject) => {
+                link.query("DELETE FROM categories WHERE id = ?", id, (error, result) => {
+                    if(error) {
+                        reject(new Error(error.message));
+                    } else {
+                        resolve(result.affectedRows);
+                    }
+                });
+            })
+        } catch(error) {
+            console.log(error);
         }
     }
 }
